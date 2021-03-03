@@ -1,0 +1,11 @@
+{
+  "name": "asciipunks",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.4.0",
+    "ganache-cli": "^6.12.2",
+    "truffle": "^5.2.2"
+  }
+}
