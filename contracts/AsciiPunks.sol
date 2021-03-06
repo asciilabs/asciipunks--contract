@@ -7,65 +7,58 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract AsciiPunks is ERC721 {
   event Generated(uint indexed index, address indexed a, string value);
 
+  event Debug(string value);
+
   uint public constant TOKEN_LIMIT = 1024;
+
+  uint internal constant ROW_LENGTH = 12;
+  uint internal constant ROW_COUNT = 12;
 
   constructor() ERC721("AsciiPunks", "ASC") {
   }
 
+  function splice(
+    string[ROW_LENGTH * ROW_COUNT] memory rows,
+    string[ROW_COUNT] memory newRow,
+    uint rowNum
+  ) internal pure returns (string[ROW_LENGTH * ROW_COUNT] memory) {
+    for (uint i = 0; i < ROW_LENGTH; i++) {
+      rows[(rowNum * ROW_LENGTH) + i] = newRow[i];
+    }
+
+    return rows;
+  }
+
   function createPunk() external payable {
     // require(msg.value == (totalSupply() * 1 finney) + 50 finney);
-    // require(totalSupply() <= tokenLimit, "AsciiPunks sale has completed.");
 
-    // address(0x63a9dbCe75413036B2B778E670aaBd4493aAF9F3).transfer(msg.value/5*4);
-    // address(0x027Fb48bC4e3999DCF88690aEbEBCC3D1748A0Eb).transfer(msg.value/5);
+    // require(totalSupply() <= TOKEN_LIMIT, "AsciiPunks sale has completed.");
 
-    // string memory baseFace = unicode"            \n            \n   ┌────┐   \n   │    ├┐  \n   │   └│  \n   │    └┘  \n   │    │   \n   │    │   \n   │    │   \n   └──┘ │   \n     │  │   \n     │  │   \n";
+    string[144] memory base = [
+      " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+      " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+      " ", " ", " ", unicode"┌",  unicode"─",  unicode"─",  unicode"─",  unicode"─",  unicode"┐", " ", " ", " ",
+      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"├", unicode"┐", " ", " ",
+      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"└", unicode"│", " ", " ",
+      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"└", unicode"┘", " ", " ",
+      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
+      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
+      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
+      " ", " ", " ", unicode"└", unicode"─", unicode"─", unicode"┘", " ", unicode"│", " ", " ", " ",
+      " ", " ", " ", " ", " ", unicode"│", " ", " ", unicode"│", " ", " ", " ",
+      " ", " ", " ", " ", " ", unicode"│", " ", " ", unicode"│", " ", " ", " "
+    ];
 
-    // string[155] memory base = [
-    //   " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "\n",
-    //   " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "\n",
-    //   " ", " ", " ", "┌", "─", "─", "─", "─", "┐", " ", " ", " ", "\n",
-    //   " ", " ", " ", "│", " ", " ", " ", " ", "├", "┐", " ", " ", "\n",
-    //   " ", " ", " ", "│", " ", " ", " ", " ", "└", "│", " ", " ", "\n",
-    //   " ", " ", " ", "│", " ", " ", " ", " ", "└", "┘", " ", " ", "\n",
-    //   " ", " ", " ", "│", " ", " ", " ", " ", "│", " ", " ", " ", "\n",
-    //   " ", " ", " ", "│", " ", " ", " ", " ", "│", " ", " ", " ", "\n",
-    //   " ", " ", " ", "│", " ", " ", " ", " ", "│", " ", " ", " ", "\n",
-    //   " ", " ", " ", "└", "─", "─", "┘", " ", "│", " ", " ", " ", "\n",
-    //   " ", " ", " ", " ", " ", "│", " ", " ", "│", " ", " ", " ", "\n",
-    //   " ", " ", " ", " ", " ", "│", " ", " ", "│", " ", " ", " "
-    // ]
+    string[12] memory mouth = ["a", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
 
-    string memory base = unicode"            \n            \n   ┌────┐   \n   │    ├┐  \n   │    └│  \n   │    └┘  \n   │    │   \n   │    │   \n   │    │   \n   └──┘ │   \n     │  │   \n     │  │   ";
+    string[ROW_LENGTH * ROW_COUNT] memory newFace = splice(base, mouth, 0);
 
-    base[1];
-
-    // string memory punk = new string(155);
-
-    // for (var i = 0; i < 155; i++) {
-    //   face[i] = base[i]
-    // }
+    emit Debug(newFace[0]);
 
     // bytes memory _bytes = unicode"   ┌────┐   ";
 
-
-
-    // string[8] memory leftFaceCharacters = [ "ʕ" , "✿" ,"꒰" , ":" , "{" , "|" , "[" , "(" ];
-    // string[13] memory eyeCharacters = ["◕" , "👁" , "ಥ" , "♥" , "ʘ̚", "X", "⊙" , "˘" , "ಠ" , "◉" , "⚆" , "¬" , "^" ];
-    // string[11] memory mouthCharacters = [ "ᴥ" , "益" , "෴" , "ʖ" , "ᆺ" , "." , "o", "◡" , "_" , "╭╮" , "‿" ];
-    // string[8] memory rightFaceCharacters = [ "ʔ" , "✿" ,"꒱" , ":" , "}" , "|" , "]" , ")" ];
-
-    // uint256 leftFacePartID = getLeftFace(seed + totalSupply());
-    // uint256 leftEyePartID = getLeftEye(seed + totalSupply());
-    // uint256 mouthPartID = getMouth(seed + totalSupply());
-    // uint256 rightEyePartID = getRightEye(seed + totalSupply());
-    // uint256 rightFacePartID = getRightFace(seed + totalSupply());
-
-    // string memory faceAssembly = string(abi.encodePacked(leftFaceCharacters[leftFacePartID], eyeCharacters[leftEyePartID], mouthCharacters[mouthPartID], eyeCharacters[rightEyePartID], rightFaceCharacters[rightFacePartID]));
-    
-
     // _registerToken(punk);
-  // }
+  }
 
   // function _registerToken(string memory value) private {
   //   uint256 tokenId = totalSupply();
@@ -75,5 +68,5 @@ contract AsciiPunks is ERC721 {
 
 
   //   _mint(msg.sender, tokenId);
-  }
+  // }
 }
