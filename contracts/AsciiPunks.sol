@@ -9,13 +9,10 @@ contract AsciiPunks is ERC721 {
 
   uint public constant TOKEN_LIMIT = 1024;
 
-  constructor() ERC721("AsciiPunks", "ASC") public {
+  constructor() ERC721("AsciiPunks", "ASC") {
   }
 
-  function testFunc() external {
-  }
-
-  // function createPunk() payable {
+  function createPunk() external payable {
     // require(msg.value == (totalSupply() * 1 finney) + 50 finney);
     // require(totalSupply() <= tokenLimit, "AsciiPunks sale has completed.");
 
@@ -39,7 +36,9 @@ contract AsciiPunks is ERC721 {
     //   " ", " ", " ", " ", " ", "│", " ", " ", "│", " ", " ", " "
     // ]
 
-    // string memory base = unicode"            \n            \n   ┌────┐   \n   │    ├┐  \n   │    └│  \n   │    └┘  \n   │    │   \n   │    │   \n   │    │   \n   └──┘ │   \n     │  │   \n     │  │   ";
+    string memory base = unicode"            \n            \n   ┌────┐   \n   │    ├┐  \n   │    └│  \n   │    └┘  \n   │    │   \n   │    │   \n   │    │   \n   └──┘ │   \n     │  │   \n     │  │   ";
+
+    base[1];
 
     // string memory punk = new string(155);
 
@@ -76,7 +75,5 @@ contract AsciiPunks is ERC721 {
 
 
   //   _mint(msg.sender, tokenId);
-  // }
-
-
+  }
 }
