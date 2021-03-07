@@ -8,7 +8,7 @@
     "migrate": "truffle migrate",
     "console": "truffle console",
     "test": "truffle test",
-    "watch-tests": "./scripts/watch-tests"
+    "watch-tests": "./scripts/watch-tests.sh"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.0",
