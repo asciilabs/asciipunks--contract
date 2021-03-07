@@ -5,7 +5,7 @@ set -oe
 watchman watch .
 
 watchman -j <<-EOT
-["trigger", "$HOME/workspace/asciipunks", {
+["trigger", ".", {
    "name": "solidity tests",
    "command": ["truffle", "test"],
    "append_files": false
