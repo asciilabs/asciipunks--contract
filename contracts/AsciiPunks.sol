@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
+pragma abicoder v2;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./Punk.sol";
 
 contract AsciiPunks is ERC721 {
   event Generated(uint indexed index, address indexed a, string value);
@@ -34,29 +36,9 @@ contract AsciiPunks is ERC721 {
 
     // require(totalSupply() <= TOKEN_LIMIT, "AsciiPunks sale has completed.");
 
-    string[144] memory base = [
-      " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
-      " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
-      " ", " ", " ", unicode"┌",  unicode"─",  unicode"─",  unicode"─",  unicode"─",  unicode"┐", " ", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"├", unicode"┐", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"└", unicode"│", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"└", unicode"┘", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", unicode"└", unicode"─", unicode"─", unicode"┘", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", " ", " ", unicode"│", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", " ", " ", unicode"│", " ", " ", unicode"│", " ", " ", " "
-    ];
 
-    string[12] memory mouth = ["a", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
-
-    string[ROW_LENGTH * ROW_COUNT] memory newFace = splice(base, mouth, 0);
-
-    emit Debug(newFace[0]);
-
-    // bytes memory _bytes = unicode"   ┌────┐   ";
-
+    Punk punk = new Punk();
+    punk.drawPunk();
     // _registerToken(punk);
   }
 
