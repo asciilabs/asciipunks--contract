@@ -7,7 +7,8 @@
     "ganache-cli": "ganache-cli --deterministic",
     "migrate": "truffle migrate",
     "console": "truffle console",
-    "test": "truffle test"
+    "test": "truffle test",
+    "watch-tests": "./scripts/watch-tests"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.0",
