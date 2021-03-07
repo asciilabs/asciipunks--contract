@@ -4,9 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "ganache-cli": "ganache-cli",
+    "ganache-cli": "ganache-cli --deterministic",
     "migrate": "truffle migrate",
-    "console": "truffle console"
+    "console": "truffle console",
+    "test": "truffle test"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.0",
