@@ -2,7 +2,7 @@
 
 set -oe
 
-watchman watch .
+watchman watch . --logfile /tmp/watchman-solidity-test.log
 
 watchman -j <<-EOT
 ["trigger", ".", {
@@ -12,6 +12,4 @@ watchman -j <<-EOT
 }]
 EOT
 
-LOG_FILE=`ps aux | grep [w]atchman\/4 | sed "s/.*logfile=\([a-zA-Z/-]*\).*/\1/g"`
-
-tail -f $LOG_FILE
+tail -f /tmp/watchman-solidity-test.log
