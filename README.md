@@ -11,7 +11,3 @@ npx trufle develop
 https://www.trufflesuite.com/docs/truffle/getting-started/running-migrations
 https://www.trufflesuite.com/docs/truffle/getting-started/using-truffle-develop-and-the-console
 https://www.trufflesuite.com/docs/truffle/getting-started/interacting-with-your-contracts
-
-
-
-

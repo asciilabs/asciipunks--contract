@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "ganache-cli": "ganache-cli --deterministic",
+    "ganache": "ganache-cli --deterministic",
     "migrate": "truffle migrate",
     "console": "truffle console",
     "test": "truffle test",
+    "compile": "truffle compile",
     "watch-tests": "./scripts/watch-tests.sh"
   },
   "dependencies": {

@@ -3,60 +3,34 @@ pragma solidity ^0.7.6;
 pragma abicoder v2;
 
 contract Punk {
-  uint internal constant ROW_LENGTH = 12;
-  uint internal constant ROW_COUNT = 12;
-  uint internal constant MOUTH_LENGTH = ROW_LENGTH;
+  event Debug(string value);
 
-  uint internal constant MOUTH_ROW = 7;
+  uint private constant LENGTH = 12;
+  uint private constant MOUTH_START_ROW = 7;
+  function drawPunk() public pure
+  returns (string memory) {
+    string memory hat = 
+      unicode"            \n"
+      unicode"            \n"
+      unicode"   ┌────┐   \n";
 
-  function splice(
-    string[ROW_LENGTH * ROW_COUNT] memory rows,
-    string[ROW_COUNT] memory newRow,
-    uint rowNum
-  ) public pure returns (string[ROW_LENGTH * ROW_COUNT] memory) {
-    for (uint i = 0; i < ROW_LENGTH; i++) {
-      rows[(rowNum * ROW_LENGTH) + i] = newRow[i];
-    }
+    string memory eyes = 
+      unicode"   │    ├┐  \n"
+      unicode"   │═ ═ └│  \n"
+      unicode"   │ ╘  └┘  \n";
 
-    return rows;
-  }
+    string memory moustache = unicode"   │    │   \n";
 
-  function drawMouth(
-    string[ROW_LENGTH * ROW_COUNT] memory rows, 
-    string[MOUTH_LENGTH] memory mouth
-  ) public pure returns (string[ROW_LENGTH * ROW_COUNT] memory) {
-    string[ROW_LENGTH * ROW_COUNT] memory res = splice(rows, mouth, MOUTH_ROW); 
-    return res;
-  }
+    string memory mouth = unicode"   │──  │   \n";
 
-  function chooseMouth(uint mouth) public pure returns (string[ROW_LENGTH] memory) {
-    if (mouth == 0) {
-      string[ROW_LENGTH] memory res = [" ", " ", " ", unicode"│", unicode"─", unicode"─", unicode" ", " ", unicode"│", " ", " ", " "];
-      return res;
-    }
+    string memory chin = 
+      unicode"   │    │   \n"
+      unicode"   └──┘ │   \n";
 
-    string[ROW_LENGTH] memory defaultRes = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
-    return defaultRes;
-  }
+    string memory neck =
+      unicode"     │  │   \n"
+      unicode"     │  │   \n";
 
-  function drawPunk() public pure returns (string[ROW_LENGTH * ROW_COUNT] memory) {
-    string[ROW_LENGTH * ROW_COUNT] memory base = [
-      " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
-      " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
-      " ", " ", " ", unicode"┌",  unicode"─",  unicode"─",  unicode"─",  unicode"─",  unicode"┐", " ", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"├", unicode"┐", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"└", unicode"│", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"└", unicode"┘", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", unicode"│", " ", " ", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", unicode"└", unicode"─", unicode"─", unicode"┘", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", " ", " ", unicode"│", " ", " ", unicode"│", " ", " ", " ",
-      " ", " ", " ", " ", " ", unicode"│", " ", " ", unicode"│", " ", " ", " "
-    ];
-
-    string[MOUTH_LENGTH] memory mouth = chooseMouth(0);
-
-    return drawMouth(base, mouth);
+    return string(abi.encodePacked(hat, eyes, moustache, mouth, chin, neck));
   }
 }
