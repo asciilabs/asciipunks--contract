@@ -163,6 +163,20 @@ contract AsciiPunks {
     }
 
     /**
+     * @dev Returns the number of NFTs owned by `_owner`. NFTs assigned to the zero address are
+     * considered invalid, and this function throws for queries about the zero address.
+     * @param _owner Address for whom to query the balance.
+     * @return Balance of _owner.
+     */
+    function balanceOf(address _owner) external view returns (uint256) {
+        require(
+            _owner != address(0),
+            "ERC721: balance query for the zero address"
+        );
+        return ownerToIds[_owner].length;
+    }
+
+    /**
      * @dev Function to check which interfaces are suported by this contract.
      * @param _interfaceID Id of the interface.
      * @return True if _interfaceID is supported, false otherwise.

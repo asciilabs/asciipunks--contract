@@ -7,7 +7,7 @@ watchman watch . --logfile /tmp/watchman-solidity-test.log
 watchman -j <<-EOT
 ["trigger", ".", {
    "name": "solidity tests",
-   "command": ["truffle", "test"],
+   "command": ["npm", "test"],
    "append_files": false
 }]
 EOT

@@ -1,7 +1,7 @@
 {
   "name": "asciipunks",
   "author": {
-    "name": "Nassredean Nasser",
+    "name": "Nassredean Nasseri",
     "email": "dean@nasseri.io",
     "url": "https://www.nasseri.io"
   },
@@ -13,19 +13,21 @@
     "ganache": "ganache-cli --deterministic",
     "migrate": "truffle migrate",
     "console": "truffle console",
-    "test": "truffle test",
+    "test": "mocha --exit --recursive",
     "compile": "truffle compile",
     "watch-tests": "./scripts/watch-tests.sh",
     "prettier": "prettier --write 'contracts/**/*.sol'"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^3.4.0",
     "ganache-cli": "^6.12.2",
     "truffle": "^5.2.2"
   },
   "devDependencies": {
+    "@openzeppelin/test-environment": "^0.1.9",
+    "@openzeppelin/test-helpers": "^0.5.10",
+    "chai": "^4.3.3",
+    "mocha": "^8.1.2",
     "prettier": "^2.2.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.6",
-    "truffle-assertions": "^0.9.2"
+    "prettier-plugin-solidity": "^1.0.0-beta.6"
   }
 }
