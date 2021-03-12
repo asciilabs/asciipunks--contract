@@ -7,6 +7,11 @@ contract Punk {
 
   uint private constant LENGTH = 12;
   uint private constant MOUTH_START_ROW = 7;
+
+  // function chooseMouth(string memory _name) returns (string memory) {
+  //   uint rand = uint(keccack256(abi.encodePacked(_str)));
+  // }
+
   function drawPunk() public pure
   returns (string memory) {
     string memory hat = 
