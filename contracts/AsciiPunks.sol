@@ -41,11 +41,13 @@ contract AsciiPunks {
     uint256 public constant TOKEN_LIMIT = 512;
     uint256 public constant PRICE = 300000000000000000;
 
+    string internal _NFTName = "AsciiPunks";
+    string internal _NFTSymbol = "ASC";
+
     bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;
     bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
     bytes4 private constant _INTERFACE_ID_ERC721_ENUMERABLE = 0x780e9d63;
-    bytes4 internal constant MAGIC_ON_ERC721_RECEIVED = 0x150b7a02;
 
     modifier validNFToken(uint256 _tokenId) {
         require(
@@ -151,6 +153,14 @@ contract AsciiPunks {
     }
 
     // ERC721 METADATA
+    function name() external view returns (string memory) {
+        return _NFTName;
+    }
+
+    function symbol() external view returns (string memory) {
+        return _NFTSymbol;
+    }
+
     function tokenURI(uint256 _tokenId)
         external
         view
