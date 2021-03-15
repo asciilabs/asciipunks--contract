@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
 
-const { accounts, contract, web3 } = require('@openzeppelin/test-environment');
 const { expect } = require('chai');
+const { accounts, contract, web3 } = require('@openzeppelin/test-environment');
 const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
-const { ZERO_ADDRESS } = constants;
-const RECEIVER_MAGIC_VALUE = '0x150b7a02';
-const Error = [ 'None', 'RevertWithMessage', 'RevertWithoutMessage', 'Panic' ]
-  .reduce((acc, entry, idx) => Object.assign({ [entry]: idx }, acc), {});
+const { shouldSupportInterfaces } = require('./SupportsInterface.js');
 
 const AsciiPunks = contract.fromArtifact("AsciiPunks");
 const ERC721ReceiverMock = contract.fromArtifact('ERC721ReceiverMock');
 
+const { ZERO_ADDRESS } = constants;
+const RECEIVER_MAGIC_VALUE = '0x150b7a02';
+const Error = [ 'None', 'RevertWithMessage', 'RevertWithoutMessage', 'Panic' ]
+  .reduce((acc, entry, idx) => Object.assign({ [entry]: idx }, acc), {});
 const [owner, newOwner, approved, anotherApproved, operator, other] = accounts
 
 const firstTokenSeed = new BN('140918');
@@ -22,6 +23,11 @@ const nonExistentTokenId = new BN('13');
 let punk;
 
 describe("AsciiPunks", async (accounts) => {
+  shouldSupportInterfaces([
+    'ERC165',
+    'ERC721',
+  ]);
+
   beforeEach(async function() {
     this.token = await AsciiPunks.new();
   });
