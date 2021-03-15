@@ -1,6 +1,12 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
+
 contract AsciiPunks {
+    using Address for address;
+
     // EVENTS
     event Transfer(
         address indexed from,
@@ -41,6 +47,7 @@ contract AsciiPunks {
     bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
     bytes4 private constant _INTERFACE_ID_ERC721_ENUMERABLE = 0x780e9d63;
+    bytes4 internal constant MAGIC_ON_ERC721_RECEIVED = 0x150b7a02;
 
     modifier validNFToken(uint256 _tokenId) {
         require(
@@ -142,7 +149,7 @@ contract AsciiPunks {
             string(abi.encodePacked(hat, eyes, moustache, mouth, chin, neck));
     }
 
-    // METADA
+    // ERC721 METADATA
 
     function tokenURI(uint256 _tokenId)
         external
@@ -250,6 +257,80 @@ contract AsciiPunks {
         returns (address)
     {
         return idToApproval[_tokenId];
+    }
+
+    function safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId,
+        bytes calldata _data
+    ) external {
+        _safeTransferFrom(_from, _to, _tokenId, _data);
+    }
+
+    function safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) external {
+        _safeTransferFrom(_from, _to, _tokenId, "");
+    }
+
+    function _safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId,
+        bytes memory _data
+    ) private validNFToken(_tokenId) canTransfer(_tokenId) {
+        address tokenOwner = idToOwner[_tokenId];
+        require(
+            tokenOwner == _from,
+            "ERC721: transfer of token that is not own"
+        );
+        require(_to != address(0), "ERC721: transfer to the zero address");
+        require(
+            tokenOwner != address(0),
+            "ERC721: owner query for nonexistent token"
+        );
+
+        _transfer(_to, _tokenId);
+        require(
+            _checkOnERC721Received(_from, _to, _tokenId, _data),
+            "ERC721: transfer to non ERC721Receiver implementer"
+        );
+    }
+
+    function _checkOnERC721Received(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory _data
+    ) private returns (bool) {
+        if (to.isContract()) {
+            try
+                IERC721Receiver(to).onERC721Received(
+                    msg.sender,
+                    from,
+                    tokenId,
+                    _data
+                )
+            returns (bytes4 retval) {
+                return retval == IERC721Receiver(to).onERC721Received.selector;
+            } catch (bytes memory reason) {
+                if (reason.length == 0) {
+                    revert(
+                        "ERC721: transfer to non ERC721Receiver implementer"
+                    );
+                } else {
+                    // solhint-disable-next-line no-inline-assembly
+                    assembly {
+                        revert(add(32, reason), mload(reason))
+                    }
+                }
+            }
+        } else {
+            return true;
+        }
     }
 
     // ERC165
