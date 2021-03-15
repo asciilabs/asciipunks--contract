@@ -39,8 +39,6 @@ contract AsciiPunks {
 
     uint256 internal numTokens = 0;
     uint256 public constant TOKEN_LIMIT = 512;
-    // Todo, implement progrmatic sale start functionality via public owner restricted API
-    // bool public hasSaleStarted = false;
     uint256 public constant PRICE = 300000000000000000;
 
     bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;
@@ -94,7 +92,10 @@ contract AsciiPunks {
 
     function _mint(address _to, uint256 seed) internal returns (string memory) {
         require(_to != address(0), "ERC721: mint to the zero address");
-        require(numTokens < TOKEN_LIMIT, "ERC721: maximum number of tokens already minted");
+        require(
+            numTokens < TOKEN_LIMIT,
+            "ERC721: maximum number of tokens already minted"
+        );
         require(msg.value >= PRICE, "ERC721: insufficient ether");
         require(seedToId[seed] == 0, "ERC721: seed already used");
 
@@ -150,7 +151,6 @@ contract AsciiPunks {
     }
 
     // ERC721 METADATA
-
     function tokenURI(uint256 _tokenId)
         external
         view
@@ -160,11 +160,18 @@ contract AsciiPunks {
         return draw(_tokenId);
     }
 
+    // ERC721 ENUMERABLE
     function totalSupply() public view returns (uint256) {
         return numTokens;
     }
 
-    // ERC721 ENUMERABLE
+    function tokenByIndex(uint256 index) public view returns (uint256) {
+        require(
+            index < numTokens,
+            "ERC721Enumerable: global index out of bounds"
+        );
+        return index;
+    }
 
     function tokenOfOwnerByIndex(address _owner, uint256 _index)
         external
@@ -179,7 +186,6 @@ contract AsciiPunks {
     }
 
     // ERC721
-
     function balanceOf(address _owner) external view returns (uint256) {
         require(
             _owner != address(0),
