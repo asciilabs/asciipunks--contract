@@ -15,11 +15,11 @@ const [owner, newOwner, approved, anotherApproved, operator, other] = accounts
 
 const firstTokenSeed = new BN('140918');
 const secondTokenSeed = new BN('12430909');
+const firstTokenId = new BN('1');
+const secondTokenId = new BN('2');
+const nonExistentTokenId = new BN('13');
 
 let punk;
-// let firstTokenId;
-// let secondTokenId;
-const nonExistentTokenId = new BN('13');
 
 describe("AsciiPunks", async (accounts) => {
   beforeEach(async function() {
@@ -29,10 +29,7 @@ describe("AsciiPunks", async (accounts) => {
   context('with minted tokens', function () {
     beforeEach(async function () {
       await this.token.createPunk(firstTokenSeed, { from: owner, value: new BN('300000000000000000')});
-      // firstTokenId = await this.token.totalSupply();
-      // this doesn't work for some reason. Returns BN type, but toNumber on it = 0.
       await this.token.createPunk(secondTokenSeed, { from: owner, value: new BN('300000000000000000')});
-      // secondTokenId = await this.token.totalSupply();
       this.toWhom = other; // default to other for toWhom in context-dependent tests
     });
 
@@ -60,7 +57,7 @@ describe("AsciiPunks", async (accounts) => {
 
     describe('ownerOf', function () {
       context('when the given token ID was tracked by punk', function () {
-        const tokenId = new BN('1');
+        const tokenId = firstTokenId;
 
         it('returns the owner of the given token ID', async function () {
           expect(await this.token.ownerOf(tokenId)).to.be.equal(owner);
@@ -79,7 +76,7 @@ describe("AsciiPunks", async (accounts) => {
     });
 
     describe('transfers', function () {
-      const tokenId = new BN('1');
+      const tokenId = firstTokenId;
       const data = '0x42';
 
       let logs = null;
@@ -124,7 +121,6 @@ describe("AsciiPunks", async (accounts) => {
         context('when called by the owner', function () {
           beforeEach(async function () {
             ({ logs } = await transferFunction.call(this, owner, this.toWhom, tokenId, { from: owner }));
-            // console.log(logs);
           });
           transferWasSuccessful({ owner, tokenId, approved });
         });
@@ -351,7 +347,7 @@ describe("AsciiPunks", async (accounts) => {
     });
 
     describe('approve', function () {
-      const tokenId = new BN('1');
+      const tokenId = firstTokenId;
 
       let logs = null;
 
@@ -470,5 +466,113 @@ describe("AsciiPunks", async (accounts) => {
       });
     });
 
+    describe('setApprovalForAll', function () {
+      context('when the operator willing to approve is not the owner', function () {
+        context('when there is no operator approval set by the sender', function () {
+          it('approves the operator', async function () {
+            await this.token.setApprovalForAll(operator, true, { from: owner });
+
+            expect(await this.token.isApprovedForAll(owner, operator)).to.equal(true);
+          });
+
+          it('emits an approval event', async function () {
+            const { logs } = await this.token.setApprovalForAll(operator, true, { from: owner });
+
+            expectEvent.inLogs(logs, 'ApprovalForAll', {
+              owner: owner,
+              operator: operator,
+              approved: true,
+            });
+          });
+        });
+
+        context('when the operator was set as not approved', function () {
+          beforeEach(async function () {
+            await this.token.setApprovalForAll(operator, false, { from: owner });
+          });
+
+          it('approves the operator', async function () {
+            await this.token.setApprovalForAll(operator, true, { from: owner });
+
+            expect(await this.token.isApprovedForAll(owner, operator)).to.equal(true);
+          });
+
+          it('emits an approval event', async function () {
+            const { logs } = await this.token.setApprovalForAll(operator, true, { from: owner });
+
+            expectEvent.inLogs(logs, 'ApprovalForAll', {
+              owner: owner,
+              operator: operator,
+              approved: true,
+            });
+          });
+
+          it('can unset the operator approval', async function () {
+            await this.token.setApprovalForAll(operator, false, { from: owner });
+
+            expect(await this.token.isApprovedForAll(owner, operator)).to.equal(false);
+          });
+        });
+
+        context('when the operator was already approved', function () {
+          beforeEach(async function () {
+            await this.token.setApprovalForAll(operator, true, { from: owner });
+          });
+
+          it('keeps the approval to the given address', async function () {
+            await this.token.setApprovalForAll(operator, true, { from: owner });
+
+            expect(await this.token.isApprovedForAll(owner, operator)).to.equal(true);
+          });
+
+          it('emits an approval event', async function () {
+            const { logs } = await this.token.setApprovalForAll(operator, true, { from: owner });
+
+            expectEvent.inLogs(logs, 'ApprovalForAll', {
+              owner: owner,
+              operator: operator,
+              approved: true,
+            });
+          });
+        });
+      });
+
+      context('when the operator is the owner', function () {
+        it('reverts', async function () {
+          await expectRevert(this.token.setApprovalForAll(owner, true, { from: owner }),
+            'ERC721: approve to caller');
+        });
+      });
+    });
+
+    describe('getApproved', async function () {
+      context('when token is not minted', async function () {
+        it('reverts', async function () {
+          await expectRevert(
+            this.token.getApproved(nonExistentTokenId),
+            'ERC721: query for nonexistent token',
+          );
+        });
+      });
+
+      context('when token has been minted ', async function () {
+        it('should return the zero address', async function () {
+          expect(await this.token.getApproved(firstTokenId)).to.be.equal(
+            ZERO_ADDRESS,
+          );
+        });
+
+        context('when account has been approved', async function () {
+          beforeEach(async function () {
+            await this.token.approve(approved, firstTokenId, { from: owner });
+          });
+
+          it('returns approved account', async function () {
+            expect(await this.token.getApproved(firstTokenId)).to.be.equal(approved);
+          });
+        });
+      });
+    });
   });
+
 });

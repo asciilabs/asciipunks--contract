@@ -164,6 +164,20 @@ contract AsciiPunks {
         return numTokens;
     }
 
+    // ERC721 ENUMERABLE
+
+    function tokenOfOwnerByIndex(address _owner, uint256 _index)
+        external
+        view
+        returns (uint256)
+    {
+        require(
+            _index < ownerToIds[_owner].length,
+            "ERC721Enumerable: owner index out of bounds"
+        );
+        return ownerToIds[_owner][_index];
+    }
+
     // ERC721
 
     function balanceOf(address _owner) external view returns (uint256) {
@@ -230,12 +244,6 @@ contract AsciiPunks {
         ownerToIds[_from].pop();
     }
 
-    function _clearApproval(uint256 _tokenId) private {
-        if (idToApproval[_tokenId] != address(0)) {
-            delete idToApproval[_tokenId];
-        }
-    }
-
     function approve(address _approved, uint256 _tokenId)
         external
         validNFToken(_tokenId)
@@ -247,9 +255,10 @@ contract AsciiPunks {
         emit Approval(owner, _approved, _tokenId);
     }
 
-    function setApprovalForAll(address _operator, bool _approved) external {
-        ownerToOperators[msg.sender][_operator] = _approved;
-        emit ApprovalForAll(msg.sender, _operator, _approved);
+    function _clearApproval(uint256 _tokenId) private {
+        if (idToApproval[_tokenId] != address(0)) {
+            delete idToApproval[_tokenId];
+        }
     }
 
     function getApproved(uint256 _tokenId)
@@ -259,6 +268,20 @@ contract AsciiPunks {
         returns (address)
     {
         return idToApproval[_tokenId];
+    }
+
+    function setApprovalForAll(address _operator, bool _approved) external {
+        require(_operator != msg.sender, "ERC721: approve to caller");
+        ownerToOperators[msg.sender][_operator] = _approved;
+        emit ApprovalForAll(msg.sender, _operator, _approved);
+    }
+
+    function isApprovedForAll(address _owner, address _operator)
+        external
+        view
+        returns (bool)
+    {
+        return ownerToOperators[_owner][_operator];
     }
 
     function safeTransferFrom(
