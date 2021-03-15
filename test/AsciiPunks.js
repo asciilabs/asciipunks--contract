@@ -30,7 +30,7 @@ describe("AsciiPunks", async (accounts) => {
     beforeEach(async function () {
       await this.token.createPunk(firstTokenSeed, { from: owner, value: new BN('300000000000000000')});
       await this.token.createPunk(secondTokenSeed, { from: owner, value: new BN('300000000000000000')});
-      this.toWhom = other; // default to other for toWhom in context-dependent tests
+      this.toWhom = other;
     });
 
     describe('balanceOf', function () {
@@ -129,14 +129,14 @@ describe("AsciiPunks", async (accounts) => {
           beforeEach(async function () {
             ({ logs } = await transferFunction.call(this, owner, this.toWhom, tokenId, { from: approved }));
           });
-          // transferWasSuccessful({ owner, tokenId, approved });
+          transferWasSuccessful({ owner, tokenId, approved });
         });
 
         context('when called by the operator', function () {
           beforeEach(async function () {
             ({ logs } = await transferFunction.call(this, owner, this.toWhom, tokenId, { from: operator }));
           });
-          // transferWasSuccessful({ owner, tokenId, approved });
+          transferWasSuccessful({ owner, tokenId, approved });
         });
 
         context('when called by the owner without an approved user', function () {
@@ -144,7 +144,7 @@ describe("AsciiPunks", async (accounts) => {
             await this.token.approve(ZERO_ADDRESS, tokenId, { from: owner });
             ({ logs } = await transferFunction.call(this, owner, this.toWhom, tokenId, { from: operator }));
           });
-          // transferWasSuccessful({ owner, tokenId, approved: null });
+          transferWasSuccessful({ owner, tokenId, approved: null });
         });
 
         context('when sent to the owner', function () {
