@@ -93,10 +93,10 @@ contract AsciiPunks {
     }
 
     function _mint(address _to, uint256 seed) internal returns (string memory) {
-        require(_to != address(0));
-        require(numTokens < TOKEN_LIMIT);
-        require(msg.value >= PRICE, "Insufficient ether sent.");
-        require(seedToId[seed] == 0);
+        require(_to != address(0), "ERC721: mint to the zero address");
+        require(numTokens < TOKEN_LIMIT, "ERC721: maximum number of tokens already minted");
+        require(msg.value >= PRICE, "ERC721: insufficient ether");
+        require(seedToId[seed] == 0, "ERC721: seed already used");
 
         uint256 id = numTokens + 1;
 
