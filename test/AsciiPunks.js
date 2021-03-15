@@ -72,7 +72,7 @@ describe("AsciiPunks", async (accounts) => {
 
         it('reverts', async function () {
           await expectRevert(
-            this.token.ownerOf(tokenId), 'ERC721: owner query for nonexistent token',
+            this.token.ownerOf(tokenId), 'ERC721: query for nonexistent token',
           );
         });
       });
@@ -209,7 +209,7 @@ describe("AsciiPunks", async (accounts) => {
           it('reverts', async function () {
             await expectRevert(
               transferFunction.call(this, owner, other, nonExistentTokenId, { from: owner }),
-              'ERC721: operator query for nonexistent token',
+              'ERC721: query for nonexistent token',
             );
           });
         });
@@ -284,7 +284,7 @@ describe("AsciiPunks", async (accounts) => {
                     nonExistentTokenId,
                     { from: owner },
                   ),
-                  'ERC721: operator query for nonexistent token',
+                  'ERC721: query for nonexistent token',
                 );
               });
             });
@@ -348,7 +348,127 @@ describe("AsciiPunks", async (accounts) => {
           });
         });
       });
-
     });
+
+    describe('approve', function () {
+      const tokenId = new BN('1');
+
+      let logs = null;
+
+      const itClearsApproval = function () {
+        it('clears approval for the token', async function () {
+          expect(await this.token.getApproved(tokenId)).to.be.equal(ZERO_ADDRESS);
+        });
+      };
+
+      const itApproves = function (address) {
+        it('sets the approval for the target address', async function () {
+          expect(await this.token.getApproved(tokenId)).to.be.equal(address);
+        });
+      };
+
+      const itEmitsApprovalEvent = function (address) {
+        it('emits an approval event', async function () {
+          expectEvent.inLogs(logs, 'Approval', {
+            owner: owner,
+            approved: address,
+            tokenId: tokenId,
+          });
+        });
+      };
+
+      context('when clearing approval', function () {
+        context('when there was no prior approval', function () {
+          beforeEach(async function () {
+            ({ logs } = await this.token.approve(ZERO_ADDRESS, tokenId, { from: owner }));
+          });
+
+          itClearsApproval();
+          itEmitsApprovalEvent(ZERO_ADDRESS);
+        });
+
+        context('when there was a prior approval', function () {
+          beforeEach(async function () {
+            await this.token.approve(approved, tokenId, { from: owner });
+            ({ logs } = await this.token.approve(ZERO_ADDRESS, tokenId, { from: owner }));
+          });
+
+          itClearsApproval();
+          itEmitsApprovalEvent(ZERO_ADDRESS);
+        });
+      });
+
+      context('when approving a non-zero address', function () {
+        context('when there was no prior approval', function () {
+          beforeEach(async function () {
+            ({ logs } = await this.token.approve(approved, tokenId, { from: owner }));
+          });
+
+          itApproves(approved);
+          itEmitsApprovalEvent(approved);
+        });
+
+        context('when there was a prior approval to the same address', function () {
+          beforeEach(async function () {
+            await this.token.approve(approved, tokenId, { from: owner });
+            ({ logs } = await this.token.approve(approved, tokenId, { from: owner }));
+          });
+
+          itApproves(approved);
+          itEmitsApprovalEvent(approved);
+        });
+
+        context('when there was a prior approval to a different address', function () {
+          beforeEach(async function () {
+            await this.token.approve(anotherApproved, tokenId, { from: owner });
+            ({ logs } = await this.token.approve(anotherApproved, tokenId, { from: owner }));
+          });
+
+          itApproves(anotherApproved);
+          itEmitsApprovalEvent(anotherApproved);
+        });
+      });
+
+      context('when the address that receives the approval is the owner', function () {
+        it('reverts', async function () {
+          await expectRevert(
+            this.token.approve(owner, tokenId, { from: owner }), 'ERC721: approval to current owner',
+          );
+        });
+      });
+
+      context('when the sender does not own the given token ID', function () {
+        it('reverts', async function () {
+          await expectRevert(this.token.approve(approved, tokenId, { from: other }),
+            'ERC721: approve caller is not owner nor approved');
+        });
+      });
+
+      context('when the sender is approved for the given token ID', function () {
+        it('reverts', async function () {
+          await this.token.approve(approved, tokenId, { from: owner });
+          await expectRevert(this.token.approve(anotherApproved, tokenId, { from: approved }),
+            'ERC721: approve caller is not owner nor approved for all');
+        });
+      });
+
+      context('when the sender is an operator', function () {
+        beforeEach(async function () {
+          await this.token.setApprovalForAll(operator, true, { from: owner });
+          ({ logs } = await this.token.approve(approved, tokenId, { from: operator }));
+        });
+
+        itApproves(approved);
+        itEmitsApprovalEvent(approved);
+      });
+
+      context('when the given token ID does not exist', function () {
+        it('reverts', async function () {
+          await expectRevert(this.token.approve(approved, nonExistentTokenId, { from: operator }),
+            'ERC721: query for nonexistent token');
+        });
+      });
+    });
+
   });
 });

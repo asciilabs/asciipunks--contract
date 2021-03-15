@@ -52,7 +52,7 @@ contract AsciiPunks {
     modifier validNFToken(uint256 _tokenId) {
         require(
             idToOwner[_tokenId] != address(0),
-            "ERC721: operator query for nonexistent token"
+            "ERC721: query for nonexistent token"
         );
         _;
     }
@@ -175,11 +175,17 @@ contract AsciiPunks {
     }
 
     function ownerOf(uint256 _tokenId) external view returns (address) {
+        return _ownerOf(_tokenId);
+    }
+
+    function _ownerOf(uint256 _tokenId)
+        internal
+        view
+        validNFToken(_tokenId)
+        returns (address)
+    {
         address _owner = idToOwner[_tokenId];
-        require(
-            _owner != address(0),
-            "ERC721: owner query for nonexistent token"
-        );
+        require(_owner != address(0), "ERC721: query for nonexistent token");
         return _owner;
     }
 
@@ -194,10 +200,6 @@ contract AsciiPunks {
             "ERC721: transfer of token that is not own"
         );
         require(_to != address(0), "ERC721: transfer to the zero address");
-        require(
-            tokenOwner != address(0),
-            "ERC721: owner query for nonexistent token"
-        );
         _transfer(_to, _tokenId);
     }
 
@@ -236,8 +238,8 @@ contract AsciiPunks {
 
     function approve(address _approved, uint256 _tokenId)
         external
-        canOperate(_tokenId)
         validNFToken(_tokenId)
+        canOperate(_tokenId)
     {
         address owner = idToOwner[_tokenId];
         require(_approved != owner, "ERC721: approval to current owner");
@@ -288,10 +290,6 @@ contract AsciiPunks {
             "ERC721: transfer of token that is not own"
         );
         require(_to != address(0), "ERC721: transfer to the zero address");
-        require(
-            tokenOwner != address(0),
-            "ERC721: owner query for nonexistent token"
-        );
 
         _transfer(_to, _tokenId);
         require(
