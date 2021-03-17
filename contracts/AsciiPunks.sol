@@ -87,7 +87,6 @@ contract AsciiPunks {
     }
 
     // MINTING
-
     function createPunk(uint256 seed) external payable returns (string memory) {
         return _mint(msg.sender, seed);
     }
@@ -106,7 +105,7 @@ contract AsciiPunks {
         idToSeed[id] = seed;
         seedToId[seed] = id;
 
-        string memory uri = draw(id);
+        string memory uri = _draw(id);
         emit Generated(id, _to, uri);
 
         numTokens = numTokens + 1;
@@ -126,8 +125,9 @@ contract AsciiPunks {
         idToOwnerIndex[_tokenId] = length - 1;
     }
 
-    function draw(uint256 id) public view returns (string memory) {
-        // uint256 rand = uint256(keccak256(abi.encodePacked(idToSeed[id])));
+    // DRAWING
+    function _draw(uint256 id) internal view returns (string memory) {
+        uint256 rand = uint256(keccak256(abi.encodePacked(idToSeed[id])));
         // rand % 1000 // for 0 to 999 inclusive
 
         string memory hat =
@@ -135,24 +135,168 @@ contract AsciiPunks {
             unicode"            \n"
             unicode"   ┌────┐   \n";
 
-        string memory eyes =
-            unicode"   │    ├┐  \n"
-            unicode"   │═ ═ └│  \n"
-            unicode"   │ ╘  └┘  \n";
-
+        string memory eyes = _drawEyes(rand);
         string memory moustache = unicode"   │    │   \n";
 
         string memory mouth = unicode"   │──  │   \n";
 
         string memory chin = unicode"   │    │   \n" unicode"   └──┘ │   \n";
-
         string memory neck = unicode"     │  │   \n" unicode"     │  │   \n";
 
         return
             string(abi.encodePacked(hat, eyes, moustache, mouth, chin, neck));
     }
 
-    // ERC721 METADATA
+    function _drawEyes(uint256 rand) internal view returns (string memory) {
+        string[48] memory leftEyes =
+            [
+                unicode"◕",
+                unicode"ಥ",
+                unicode"♥"
+                unicode"ʘ̚",
+                unicode"X",
+                unicode"⊙",
+                unicode"˘",
+                unicode"ಠ",
+                unicode"◉",
+                unicode"⚆",
+                unicode"¬",
+                unicode"^",
+                unicode"═",
+                unicode"┼",
+                unicode"┬",
+                unicode"■",
+                unicode"─",
+                unicode"û",
+                unicode"╜",
+                unicode"δ",
+                unicode"│",
+                unicode"┐",
+                unicode"┌",
+                unicode"┌",
+                unicode"╤",
+                unicode"/",
+                unicode"\\",
+                unicode"/",
+                unicode"\\",
+                unicode"╦",
+                unicode"♥",
+                unicode"♠",
+                unicode"♦",
+                unicode"╝",
+                unicode"◄",
+                unicode"►",
+                unicode"◄",
+                unicode"►",
+                unicode"I",
+                unicode"╚",
+                unicode"╔",
+                unicode"╙",
+                unicode"╜",
+                unicode"╓",
+                unicode"╥",
+                unicode"$",
+                unicode"○",
+                unicode"N",
+                unicode"x"
+            ];
+
+        string[48] memory rightEyes =
+            [
+                unicode"◕",
+                unicode"ಥ",
+                unicode"♥",
+                unicode"ʘ̚",
+                unicode"X",
+                unicode"⊙",
+                unicode"˘",
+                unicode"ಠ",
+                unicode"◉",
+                unicode"⚆",
+                unicode"¬",
+                unicode"^"
+                unicode"═",
+                unicode"┼",
+                unicode"┬",
+                unicode"■",
+                unicode"─",
+                unicode"û",
+                unicode"╜",
+                unicode"δ",
+                unicode"│",
+                unicode"┐",
+                unicode"┐",
+                unicode"┌",
+                unicode"╤",
+                unicode"\\",
+                unicode"/",
+                unicode"/",
+                unicode"\\",
+                unicode"╦",
+                unicode"♠",
+                unicode"♣",
+                unicode"♦",
+                unicode"╝",
+                unicode"►",
+                unicode"◄",
+                unicode"◄",
+                unicode"◄",
+                unicode"I",
+                unicode"╚",
+                unicode"╗",
+                unicode"╜",
+                unicode"╜",
+                unicode"╓",
+                unicode"╥",
+                unicode"$",
+                unicode"○",
+                unicode"N",
+                unicode"x"
+            ];
+        uint256 eyeId = rand % 48;
+
+        string memory leftEye = leftEyes[eyeId];
+        string memory rightEye = rightEyes[eyeId];
+        string memory nose = _drawNose(rand);
+
+        string memory forehead = unicode"   │    ├┐  \n";
+        string memory leftFace = unicode"   │";
+        string memory rightFace = unicode" └│  \n";
+
+        return
+            string(
+                abi.encodePacked(
+                    forehead,
+                    leftFace,
+                    leftEye,
+                    " ",
+                    rightEye,
+                    rightFace,
+                    nose
+                )
+            );
+    }
+
+    function _drawNose(uint256 rand) internal view returns (string memory) {
+        string[9] memory noses =
+            [
+                unicode"└",
+                unicode"╘",
+                unicode"<",
+                unicode"└",
+                unicode"┌",
+                unicode"^",
+                unicode"└",
+                unicode"┼",
+                unicode"Γ"
+            ];
+
+        uint256 noseId = rand % 9;
+        string memory nose = noses[noseId];
+        return
+            string(abi.encodePacked(unicode"   │ ", nose, unicode"  └┘  \n"));
+    }
+
     function name() external view returns (string memory) {
         return _NFTName;
     }
@@ -167,10 +311,9 @@ contract AsciiPunks {
         validNFToken(_tokenId)
         returns (string memory)
     {
-        return draw(_tokenId);
+        return _draw(_tokenId);
     }
 
-    // ERC721 ENUMERABLE
     function totalSupply() public view returns (uint256) {
         return numTokens;
     }
@@ -195,7 +338,6 @@ contract AsciiPunks {
         return ownerToIds[_owner][_index];
     }
 
-    // ERC721
     function balanceOf(address _owner) external view returns (uint256) {
         require(
             _owner != address(0),
@@ -359,7 +501,6 @@ contract AsciiPunks {
                         "ERC721: transfer to non ERC721Receiver implementer"
                     );
                 } else {
-                    // solhint-disable-next-line no-inline-assembly
                     assembly {
                         revert(add(32, reason), mload(reason))
                     }
@@ -369,8 +510,6 @@ contract AsciiPunks {
             return true;
         }
     }
-
-    // ERC165
 
     function supportsInterface(bytes4 _interfaceID)
         external
