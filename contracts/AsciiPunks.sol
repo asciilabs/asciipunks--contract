@@ -128,18 +128,11 @@ contract AsciiPunks {
     // DRAWING
     function _draw(uint256 id) internal view returns (string memory) {
         uint256 rand = uint256(keccak256(abi.encodePacked(idToSeed[id])));
-        // rand % 1000 // for 0 to 999 inclusive
 
-        string memory hat =
-            unicode"            \n"
-            unicode"            \n"
-            unicode"   ┌────┐   \n";
-
-        string memory eyes = _drawEyes(rand);
+        string memory top = _chooseTop(rand);
+        string memory eyes = _chooseEyes(rand);
         string memory moustache = unicode"   │    │   \n";
-
         string memory mouth = unicode"   │──  │   \n";
-
         string memory chin = unicode"   │    │   \n" unicode"   └──┘ │   \n";
         string memory neck = unicode"     │  │   \n" unicode"     │  │   \n";
 
@@ -147,7 +140,182 @@ contract AsciiPunks {
             string(abi.encodePacked(hat, eyes, moustache, mouth, chin, neck));
     }
 
-    function _drawEyes(uint256 rand) internal view returns (string memory) {
+    function _chooseTop(uint256 rand) internal pure returns (string memory) {
+        string[56] memory tops = [
+                unicode"   ┌───┐    \n"
+                unicode"   │   ┼┐   \n"
+                unicode"   ├────┼┼  \n",
+                unicode"   ┌┬┬┬┬┐   \n"
+                unicode"   ╓┬┬┬┬╖   \n"
+                unicode"   ╙┴┴┴┴╜   \n",
+                unicode"   ╒════╕   \n"
+                unicode"  ┌┴────┴┐  \n"
+                unicode"  └┬────┬┘  \n",
+                unicode"   ╒════╕   \n"
+                unicode"   │□□□□│   \n"
+                unicode"  └┬────┬┘  \n",
+                unicode"   ╒════╕   \n"
+                unicode"   │    │   \n"
+                unicode" └─┬────┬─┘ \n",
+                unicode"    ◛◛◛◛    \n"
+                unicode"   ▄████▄   \n"
+                unicode"   ┌────┐   \n",
+                unicode"    ◙◙◙◙    \n"
+                unicode"   ▄████▄   \n"
+                unicode"   ┌────┐   \n",
+                unicode"   ┌───┐    \n"
+                unicode"┌──┤   └┐   \n"
+                unicode"└──┼────┤   \n",
+                unicode"    ┌───┐   \n"
+                unicode"   ┌┘   ├──┐\n"
+                unicode"   ├────┼──┘\n",
+                unicode"   ┌────┐/  \n"
+                unicode"┌──┴────┴──┐\n"
+                unicode"└──┬────┬──┘\n",
+                unicode"   ╒════╕   \n"
+                unicode" ┌─┴────┴─┐ \n"
+                unicode" └─┬────┬─┘ \n",
+                unicode"  ┌──────┐  \n"
+                unicode"  │▲▲▲▲▲▲│  \n"
+                unicode"  └┬────┬┘  \n",
+                unicode"  ┌┌────┐┐  \n"
+                unicode"  ││┌──┐││  \n"
+                unicode"  └┼┴──┴┼┘  \n",
+                unicode"   ┌────┐   \n"
+                unicode"  ┌┘─   │   \n"
+                unicode"  └┌────┐   \n",
+                unicode"            \n"
+                unicode"   ┌┬┬┬┬┐   \n"
+                unicode"   ├┴┴┴┴┤   \n",
+                unicode"            \n"
+                unicode"    ╓┬╥┐    \n"
+                unicode"   ┌╨┴╨┴┐   \n",
+                unicode"            \n"
+                unicode"   ╒╦╦╦╦╕   \n"
+                unicode"   ╞╩╩╩╩╡   \n",
+                unicode"            \n"
+                unicode"            \n"
+                unicode"   ┌┼┼┼┼┐   \n",
+                unicode"            \n"
+                unicode"    ││││    \n"
+                unicode"   ┌┼┼┼┼┐   \n",
+                unicode"      ╔     \n"
+                unicode"     ╔║     \n"
+                unicode"   ┌─╫╫─┐   \n",
+                unicode"            \n"
+                unicode"    ║║║║    \n"
+                unicode"   ┌╨╨╨╨┐   \n",
+                unicode"            \n"
+                unicode"   ▐▐▐▌▌▌   \n"
+                unicode"   ┌────┐   \n",
+                unicode"            \n"
+                unicode"   \\/////   \n"
+                unicode"   ┌────┐   \n",
+                unicode"    ┐ ┌     \n"
+                unicode"   ┐││││┌   \n"
+                unicode"   ┌────┐   \n",
+                unicode"  ┌┐ ┐┌┐┌┐  \n"
+                unicode"  └└┐││┌┘   \n"
+                unicode"   ┌┴┴┴┴┐   \n",
+                unicode"  ┐┐┐┐┐     \n"
+                unicode"  └└└└└┐    \n"
+                unicode"   └└└└└┐   \n",
+                unicode"            \n"
+                unicode"   ││││││   \n"
+                unicode"   ┌────┐   \n",
+                unicode"            \n"
+                unicode"    ╓╓╓╓    \n"
+                unicode"   ┌╨╨╨╨┐   \n",
+                unicode"    ╔╔╗╗╗   \n"
+                unicode"   ╔╔╔╗╗╗╗  \n"
+                unicode"  ╔╝╝║ ╚╚╗  \n",
+                unicode"   ╔╔╔╔╔╗   \n"
+                unicode"  ╔╔╔╔╔╗║╗  \n"
+                unicode"  ╝║╨╨╨╨║╚  \n",
+                unicode"   ╔╔═╔═╔   \n"
+                unicode"   ╔╩╔╩╔╝   \n"
+                unicode"   ┌────┐   \n",
+                unicode"            \n"
+                unicode"     ///    \n"
+                unicode"   ┌────┐   \n",
+                unicode"     ╔╗╔╗   \n"
+                unicode"    ╔╗╔╗╝   \n"
+                unicode"   ┌╔╝╔╝┐   \n",
+                unicode"     ╔╔╔╔╝  \n"
+                unicode"    ╔╝╔╝    \n"
+                unicode"   ┌╨╨╨─┐   \n",
+                unicode"       ╔╗   \n"
+                unicode"    ╔╔╔╗╝   \n"
+                unicode"   ┌╚╚╝╝┐   \n",
+                unicode"   ╔════╗   \n"
+                unicode"  ╔╚╚╚╝╝╝╗  \n"
+                unicode"  ╟┌────┐╢  \n",
+                unicode"    ╔═╗     \n"
+                unicode"    ╚╚╚╗    \n"
+                unicode"   ┌────┐   \n",
+                unicode"            \n"
+                unicode"            \n"
+                unicode"   ┌╨╨╨╨┐   \n",
+                unicode"            \n"
+                unicode"    ⌂⌂⌂⌂    \n"
+                unicode"   ┌────┐   \n",
+                unicode"   ┌────┐   \n"
+                unicode"   │   /└┐  \n"
+                unicode"   ├────┐/  \n",
+                unicode"            \n"
+                unicode"   ((((((   \n"
+                unicode"   ┌────┐   \n",
+                unicode"   ┌┌┌┌┌┐   \n"
+                unicode"   ├┘┘┘┘┘   \n"
+                unicode"   ┌────┐   \n",
+                unicode"   «°┐      \n"
+                unicode"    │╪╕     \n"
+                unicode"   ┌└┼──┐   \n",
+                unicode"  <° °>   § \n"
+                unicode"   \'/   /  \n"
+                unicode"   {())}}   \n",
+                unicode"   ██████   \n"
+                unicode"  ██ ██ ██  \n"
+                unicode" █ ██████ █ \n",
+                unicode"    ████    \n"
+                unicode"   ██◙◙██   \n"
+                unicode"   ┌─▼▼─┐   \n",
+                unicode"   ╓╖  ╓╖   \n"
+                unicode"  °╜╚╗╔╝╙°  \n"
+                unicode"   ┌─╨╨─┐   \n",
+                unicode"   ± ±± ±   \n"
+                unicode"   ◙◙◙◙◙◙   \n"
+                unicode"   ┌────┐   \n",
+                unicode"  ♫     ♪   \n"
+                unicode"    ♪     ♫ \n"
+                unicode" ♪ ┌────┐   \n",
+                unicode"    /≡≡\\    \n"
+                unicode"   /≡≡≡≡\\   \n"
+                unicode"  /┌────┐\\  \n",
+                unicode"            \n"
+                unicode"   ♣♥♦♠♣♥   \n"
+                unicode"   ┌────┐   \n",
+                unicode"     [⌂]    \n"
+                unicode"      │     \n"
+                unicode"   ┌────┐   \n",
+                unicode"  /\\/\\/\\/\\  \n"
+                unicode"  \\\\/\\/\\//  \n"
+                unicode"   ┌────┐   \n",
+                unicode"    ↑↑↓↓    \n"
+                unicode"   ←→←→AB   \n"
+                unicode"   ┌────┐   \n",
+                unicode"    ┌─┬┐    \n"
+                unicode"   ┌┘┌┘└┐   \n"
+                unicode"   ├─┴──┤   \n",
+                unicode"    ☼  ☼    \n"
+                unicode"     \\/     \n"
+                unicode"   ┌────┐   \n"
+            ];
+        uint256 topId = rand % 56;
+        return tops[topId];
+    }
+
+    function _chooseEyes(uint256 rand) internal pure returns (string memory) {
         string[48] memory leftEyes =
             [
                 unicode"◕",
@@ -257,7 +425,7 @@ contract AsciiPunks {
 
         string memory leftEye = leftEyes[eyeId];
         string memory rightEye = rightEyes[eyeId];
-        string memory nose = _drawNose(rand);
+        string memory nose = _chooseNose(rand);
 
         string memory forehead = unicode"   │    ├┐  \n";
         string memory leftFace = unicode"   │";
@@ -277,7 +445,7 @@ contract AsciiPunks {
             );
     }
 
-    function _drawNose(uint256 rand) internal view returns (string memory) {
+    function _chooseNose(uint256 rand) internal pure returns (string memory) {
         string[9] memory noses =
             [
                 unicode"└",
