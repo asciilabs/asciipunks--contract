@@ -585,6 +585,14 @@ describe("AsciiPunks", async (accounts) => {
     describe('createPunk', function () {
       let logs = null;
 
+      it.only('randomly generates cool AsciiPunks', async function() {
+        let i;
+        for (i = 0; i < 1000; i++) {
+          let punk = await this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')});
+          console.log(punk);
+        };
+      });
+
       it('reverts when not enough ether sent', async function () {
         await expectRevert(
           this.token.createPunk(
@@ -607,6 +615,7 @@ describe("AsciiPunks", async (accounts) => {
           expectEvent.inLogs(this.logs, 'Transfer', { from: ZERO_ADDRESS, to: owner, tokenId: firstTokenId });
         });
 
+
         it('creates the token', async function () {
           expect(await this.token.balanceOf(owner)).to.be.bignumber.equal('1');
           expect(await this.token.ownerOf(firstTokenId)).to.equal(owner);
@@ -616,7 +625,7 @@ describe("AsciiPunks", async (accounts) => {
           await expectRevert(
             this.token.createPunk(
               firstTokenSeed,
-             { from: owner, value: new BN('300000000000000000') }
+              { from: owner, value: new BN('300000000000000000') }
             ),
             'ERC721: seed already used'
           );

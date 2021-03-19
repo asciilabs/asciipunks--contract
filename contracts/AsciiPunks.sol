@@ -131,17 +131,91 @@ contract AsciiPunks {
 
         string memory top = _chooseTop(rand);
         string memory eyes = _chooseEyes(rand);
-        string memory moustache = unicode"   │    │   \n";
-        string memory mouth = unicode"   │──  │   \n";
+        string memory mouth = _chooseMouth(rand);
+
         string memory chin = unicode"   │    │   \n" unicode"   └──┘ │   \n";
         string memory neck = unicode"     │  │   \n" unicode"     │  │   \n";
 
-        return
-            string(abi.encodePacked(hat, eyes, moustache, mouth, chin, neck));
+        return string(abi.encodePacked(top, eyes, mouth, chin, neck));
+    }
+
+    function _chooseMouth(uint256 rand) internal pure returns (string memory) {
+        string[32] memory mouths =
+            [
+                unicode"│   │    │   │\n"
+                unicode"│   │──  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │δ   │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │─┬  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │(─) │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │[─] │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │<─> │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │╙─  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │─╜  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │└─┘ │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │┌─┐ │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │╓─  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │─╖  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │┼─┼ │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │──┼ │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │«─» │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │──  │   │\n",
+                unicode"│ ∙ │    │   │\n"
+                unicode"│ ∙───   │   │\n",
+                unicode"│ ∙ │    │   │\n"
+                unicode"│ ∙───)  │   │\n",
+                unicode"│ ∙ │    │   │\n"
+                unicode"│ ∙───]  │   │\n",
+                unicode"│   │⌐¬  │   │\n"
+                unicode"│ √────  │   │\n",
+                unicode"│   │╓╖  │   │\n"
+                unicode"│   │──  │   │\n",
+                unicode"│   │~~  │   │\n"
+                unicode"│   │/\\  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │══  │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │▼▼  │   │\n",
+                unicode"│   │⌐¬  │   │\n"
+                unicode"│   │O   │   │\n",
+                unicode"│   │    │   │\n"
+                unicode"│   │O   │   │\n",
+                unicode"│ ∙ │⌐¬  │   │\n"
+                unicode"│ ∙───   │   │\n",
+                unicode"│ ∙ │⌐¬  │   │\n"
+                unicode"│ ∙───)  │   │\n",
+                unicode"│ ∙ │⌐¬  │   │\n"
+                unicode"│ ∙───]  │   │\n",
+                unicode"│   │⌐¬  │   │\n"
+                unicode"│   │──  │   │\n",
+                unicode"│   │⌐-¬ │   │\n"
+                unicode"│   │    │   │\n",
+                unicode"│   │┌-┐ │   │\n"
+                unicode"│   ││ │ │   │\n"
+            ];
+
+        uint256 mouthId = rand % 32;
+
+        return mouths[mouthId];
     }
 
     function _chooseTop(uint256 rand) internal pure returns (string memory) {
-        string[56] memory tops = [
+        string[56] memory tops =
+            [
                 unicode"   ┌───┐    \n"
                 unicode"   │   ┼┐   \n"
                 unicode"   ├────┼┼  \n",
@@ -272,7 +346,7 @@ contract AsciiPunks {
                 unicode"    │╪╕     \n"
                 unicode"   ┌└┼──┐   \n",
                 unicode"  <° °>   § \n"
-                unicode"   \'/   /  \n"
+                unicode"   '/   /  \n"
                 unicode"   {())}}   \n",
                 unicode"   ██████   \n"
                 unicode"  ██ ██ ██  \n"

@@ -1,0 +1,64 @@
+unicode"│   │    │   │\n"
+unicode"│   │──  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │δ   │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │─┬  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │(─) │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │[─] │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │<─> │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │╙─  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │─╜  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │└─┘ │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │┌─┐ │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │╓─  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │─╖  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │┼─┼ │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │──┼ │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │«─» │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │──  │   │\n",
+unicode"│ ∙ │    │   │\n"
+unicode"│ ∙───   │   │\n",
+unicode"│ ∙ │    │   │\n"
+unicode"│ ∙───)  │   │\n",
+unicode"│ ∙ │    │   │\n"
+unicode"│ ∙───]  │   │\n",
+unicode"│   │⌐¬  │   │\n"
+unicode"│ √────  │   │\n",
+unicode"│   │╓╖  │   │\n"
+unicode"│   │──  │   │\n",
+unicode"│   │~~  │   │\n"
+unicode"│   │/\  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │══  │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │▼▼  │   │\n",
+unicode"│   │⌐¬  │   │\n"
+unicode"│   │O   │   │\n",
+unicode"│   │    │   │\n"
+unicode"│   │O   │   │\n",
+unicode"│ ∙ │⌐¬  │   │\n"
+unicode"│ ∙───   │   │\n",
+unicode"│ ∙ │⌐¬  │   │\n"
+unicode"│ ∙───)  │   │\n",
+unicode"│ ∙ │⌐¬  │   │\n"
+unicode"│ ∙───]  │   │\n",
+unicode"│   │⌐¬  │   │\n"
+unicode"│   │──  │   │\n",
+unicode"│   │⌐-¬ │   │\n"
+unicode"│   │    │   │\n",
+unicode"│   │┌-┐ │   │\n"
+unicode"│   ││ │ │   │\n"
