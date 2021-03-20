@@ -148,7 +148,7 @@ library AsciiPunkFactory {
                 unicode"    │╪╕     \n"
                 unicode"   ┌└┼──┐   \n",
                 unicode"  <° °>   § \n"
-                unicode"   '/   /  \n"
+                unicode"   \\'/   /  \n"
                 unicode"   {())}}   \n",
                 unicode"   ██████   \n"
                 unicode"  ██ ██ ██  \n"
