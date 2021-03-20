@@ -586,6 +586,35 @@ describe("AsciiPunks", async (accounts) => {
       });
     });
 
+    describe('draw', function () {
+      let logs = null;
+
+      beforeEach(async function () {
+        ({ logs: this.logs } = await this.token.createPunk(
+          firstTokenSeed,
+          { from: owner, value: new BN('300000000000000000')}
+        ));
+      });
+
+      it('returns the punk string', async function () {
+        const punk = await this.token.draw(new BN('1'));
+        expect(punk).to.equal(
+"            \n" +
+"   ♣♥♦♠♣♥   \n" +
+"   ┌────┐   \n" +
+"   │    ├┐  \n" +
+"   │► ◄ └│  \n" +
+"   │ ┼  └┘  \n" +
+" ∙ │    │   \n" +
+" ∙───]  │   \n" +
+"   │    │   \n" +
+"   └──┘ │   \n" +
+"     │  │   \n" +
+"     │  │   \n"
+        )
+      });
+    });
+
     describe('createPunk', function () {
       let logs = null;
 

@@ -109,15 +109,15 @@ contract AsciiPunks is Ownable {
         idToSeed[id] = seed;
         seedToId[seed] = id;
 
-        string memory uri = AsciiPunkFactory.draw(idToSeed[id]);
-        emit Generated(id, _to, uri);
+        string memory punk = AsciiPunkFactory.draw(idToSeed[id]);
+        emit Generated(id, _to, punk);
 
         numTokens = numTokens + 1;
         _registerToken(_to, id);
 
         emit Transfer(address(0), _to, id);
 
-        return uri;
+        return punk;
     }
 
     function _registerToken(address _to, uint256 _tokenId) internal {
@@ -161,9 +161,6 @@ contract AsciiPunks is Ownable {
     }
 
     function toString(uint256 value) internal pure returns (string memory) {
-        // Inspired by OraclizeAPI's implementation - MIT licence
-        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-
         if (value == 0) {
             return "0";
         }
