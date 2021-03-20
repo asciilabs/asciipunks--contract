@@ -774,45 +774,47 @@ describe("AsciiPunks", async (accounts) => {
       expect(await this.token.symbol()).to.be.equal('ASC');
     });
 
-    // describe('token URI', function () {
-    //   beforeEach(async function () {
-    //     await this.token.mint(owner, firstTokenId);
-    //   });
+    describe('token URI', function () {
+      const baseURI = "https://api.com/v1/";
+      beforeEach(async function () {
+        await this.token.createPunk(firstTokenSeed, { from: owner, value: new BN('300000000000000000')});
+      });
 
-    //   it('return empty string by default', async function () {
-    //     expect(await this.token.tokenURI(firstTokenId)).to.be.equal('');
-    //   });
+      it('returns empty string by default', async function () {
+        expect(await this.token.tokenURI(firstTokenId)).to.be.equal('');
+      });
 
-    //   it('reverts when queried for non existent token id', async function () {
-    //     await expectRevert(
-    //       this.token.tokenURI(nonExistentTokenId), 'ERC721Metadata: URI query for nonexistent token',
-    //     );
-    //   });
+      it('reverts when queried for non existent token id', async function () {
+        await expectRevert(
+          this.token.tokenURI(nonExistentTokenId), 'ERC721: query for nonexistent token',
+        );
+      });
 
-    //   describe('base URI', function () {
-    //     beforeEach(function () {
-    //       if (this.token.setBaseURI === undefined) {
-    //         this.skip();
-    //       }
-    //     });
+      describe('base URI', function () {
+        it('base URI can be set', async function () {
+          await this.token.setBaseURI(baseURI);
+          expect(await this.token.baseURI()).to.equal(baseURI);
+        });
 
-    //     it('base URI can be set', async function () {
-    //       await this.token.setBaseURI(baseURI);
-    //       expect(await this.token.baseURI()).to.equal(baseURI);
-    //     });
+        it('does not let base URI to be set by non-owner', async function () {
+          await expectRevert(
+            this.token.setBaseURI(baseURI, { from: approved }),
+            'Ownable: caller is not the owner.'
+          );
+        });
 
-    //     it('base URI is added as a prefix to the token URI', async function () {
-    //       await this.token.setBaseURI(baseURI);
-    //       expect(await this.token.tokenURI(firstTokenId)).to.be.equal(baseURI + firstTokenId.toString());
-    //     });
+        it('base URI is added as a prefix to the token URI', async function () {
+          await this.token.setBaseURI(baseURI);
+          expect(await this.token.tokenURI(firstTokenId)).to.be.equal(baseURI + firstTokenId.toString());
+        });
 
-    //     it('token URI can be changed by changing the base URI', async function () {
-    //       await this.token.setBaseURI(baseURI);
-    //       const newBaseURI = 'https://api.com/v2/';
-    //       await this.token.setBaseURI(newBaseURI);
-    //       expect(await this.token.tokenURI(firstTokenId)).to.be.equal(newBaseURI + firstTokenId.toString());
-    //     });
-    //   });
-    // });
+        it('token URI can be changed by changing the base URI', async function () {
+          await this.token.setBaseURI(baseURI);
+          const newBaseURI = 'https://api.com/v2/';
+          await this.token.setBaseURI(newBaseURI);
+          expect(await this.token.tokenURI(firstTokenId)).to.be.equal(newBaseURI + firstTokenId.toString());
+        });
+      });
+    });
   });
 });

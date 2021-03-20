@@ -3,9 +3,10 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./AsciiPunkFactory.sol";
 
-contract AsciiPunks {
+contract AsciiPunks is Ownable {
     using Address for address;
 
     // EVENTS
@@ -30,6 +31,7 @@ contract AsciiPunks {
     event Generated(uint256 indexed index, address indexed a, string value);
 
     mapping(bytes4 => bool) private _supportedInterfaces;
+
     mapping(uint256 => uint256) internal idToSeed;
     mapping(uint256 => uint256) internal seedToId;
     mapping(uint256 => address) internal idToOwner;
@@ -38,6 +40,7 @@ contract AsciiPunks {
     mapping(address => mapping(address => bool)) internal ownerToOperators;
     mapping(uint256 => address) internal idToApproval;
 
+    string private _baseTokenURI;
     uint256 internal numTokens = 0;
     uint256 public constant TOKEN_LIMIT = 1024;
     uint256 public constant PRICE = 300000000000000000;
@@ -62,7 +65,7 @@ contract AsciiPunks {
         address owner = idToOwner[_tokenId];
 
         require(
-            owner == msg.sender || ownerToOperators[owner][msg.sender],
+            owner == _msgSender() || ownerToOperators[owner][_msgSender()],
             "ERC721: approve caller is not owner nor approved for all"
         );
         _;
@@ -72,9 +75,9 @@ contract AsciiPunks {
         address tokenOwner = idToOwner[_tokenId];
 
         require(
-            tokenOwner == msg.sender ||
-                idToApproval[_tokenId] == msg.sender ||
-                ownerToOperators[tokenOwner][msg.sender],
+            tokenOwner == _msgSender() ||
+                idToApproval[_tokenId] == _msgSender() ||
+                ownerToOperators[tokenOwner][_msgSender()],
             "ERC721: transfer caller is not owner nor approved"
         );
         _;
@@ -89,7 +92,7 @@ contract AsciiPunks {
 
     // MINTING
     function createPunk(uint256 seed) external payable returns (string memory) {
-        return _mint(msg.sender, seed);
+        return _mint(_msgSender(), seed);
     }
 
     function _mint(address _to, uint256 seed) internal returns (string memory) {
@@ -134,14 +137,54 @@ contract AsciiPunks {
         return _NFTSymbol;
     }
 
+    function draw(uint256 _tokenId) external view validNFToken(_tokenId) returns (string memory)
+    {
+        string memory uri = AsciiPunkFactory.draw(idToSeed[_tokenId]);
+        return uri;
+    }
+
     function tokenURI(uint256 _tokenId)
         external
         view
         validNFToken(_tokenId)
         returns (string memory)
     {
-        string memory uri = AsciiPunkFactory.draw(idToSeed[_tokenId]);
-        return uri;
+        string memory uri = _baseURI();
+        return bytes(uri).length > 0 ? string(abi.encodePacked(uri, toString(_tokenId))) : '';
+    }
+
+    function toString(uint256 value) internal pure returns (string memory) {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+    function _baseURI() internal view returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    function setBaseURI(string calldata newBaseTokenURI) public onlyOwner {
+        _baseTokenURI = newBaseTokenURI;
+    }
+
+    function baseURI() public view returns (string memory) {
+        return _baseURI();
     }
 
     function totalSupply() public view returns (uint256) {
@@ -259,9 +302,9 @@ contract AsciiPunks {
     }
 
     function setApprovalForAll(address _operator, bool _approved) external {
-        require(_operator != msg.sender, "ERC721: approve to caller");
-        ownerToOperators[msg.sender][_operator] = _approved;
-        emit ApprovalForAll(msg.sender, _operator, _approved);
+        require(_operator != _msgSender(), "ERC721: approve to caller");
+        ownerToOperators[_msgSender()][_operator] = _approved;
+        emit ApprovalForAll(_msgSender(), _operator, _approved);
     }
 
     function isApprovedForAll(address _owner, address _operator)
@@ -318,7 +361,7 @@ contract AsciiPunks {
         if (to.isContract()) {
             try
                 IERC721Receiver(to).onERC721Received(
-                    msg.sender,
+                    _msgSender(),
                     from,
                     tokenId,
                     _data
