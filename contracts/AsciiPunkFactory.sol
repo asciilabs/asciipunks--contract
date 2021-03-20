@@ -196,8 +196,7 @@ library AsciiPunkFactory {
             [
                 unicode"◕",
                 unicode"ಥ",
-                unicode"♥"
-                unicode"ʘ̚",
+                unicode"♥",
                 unicode"X",
                 unicode"⊙",
                 unicode"˘",
@@ -250,7 +249,6 @@ library AsciiPunkFactory {
                 unicode"◕",
                 unicode"ಥ",
                 unicode"♥",
-                unicode"ʘ̚",
                 unicode"X",
                 unicode"⊙",
                 unicode"˘",
@@ -258,7 +256,7 @@ library AsciiPunkFactory {
                 unicode"◉",
                 unicode"⚆",
                 unicode"¬",
-                unicode"^"
+                unicode"^",
                 unicode"═",
                 unicode"┼",
                 unicode"┬",
@@ -324,70 +322,70 @@ library AsciiPunkFactory {
     function _chooseMouth(uint256 rand) internal pure returns (string memory) {
         string[32] memory mouths =
             [
-                unicode"│   │    │   │\n"
-                unicode"│   │──  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │δ   │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │─┬  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │(─) │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │[─] │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │<─> │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │╙─  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │─╜  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │└─┘ │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │┌─┐ │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │╓─  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │─╖  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │┼─┼ │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │──┼ │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │«─» │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │──  │   │\n",
-                unicode"│ ∙ │    │   │\n"
-                unicode"│ ∙───   │   │\n",
-                unicode"│ ∙ │    │   │\n"
-                unicode"│ ∙───)  │   │\n",
-                unicode"│ ∙ │    │   │\n"
-                unicode"│ ∙───]  │   │\n",
-                unicode"│   │⌐¬  │   │\n"
-                unicode"│ √────  │   │\n",
-                unicode"│   │╓╖  │   │\n"
-                unicode"│   │──  │   │\n",
-                unicode"│   │~~  │   │\n"
-                unicode"│   │/\\  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │══  │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │▼▼  │   │\n",
-                unicode"│   │⌐¬  │   │\n"
-                unicode"│   │O   │   │\n",
-                unicode"│   │    │   │\n"
-                unicode"│   │O   │   │\n",
-                unicode"│ ∙ │⌐¬  │   │\n"
-                unicode"│ ∙───   │   │\n",
-                unicode"│ ∙ │⌐¬  │   │\n"
-                unicode"│ ∙───)  │   │\n",
-                unicode"│ ∙ │⌐¬  │   │\n"
-                unicode"│ ∙───]  │   │\n",
-                unicode"│   │⌐¬  │   │\n"
-                unicode"│   │──  │   │\n",
-                unicode"│   │⌐-¬ │   │\n"
-                unicode"│   │    │   │\n",
-                unicode"│   │┌-┐ │   │\n"
-                unicode"│   ││ │ │   │\n"
+                unicode"   │    │   \n"
+                unicode"   │──  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │δ   │   \n",
+                unicode"   │    │   \n"
+                unicode"   │─┬  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │(─) │   \n",
+                unicode"   │    │   \n"
+                unicode"   │[─] │   \n",
+                unicode"   │    │   \n"
+                unicode"   │<─> │   \n",
+                unicode"   │    │   \n"
+                unicode"   │╙─  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │─╜  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │└─┘ │   \n",
+                unicode"   │    │   \n"
+                unicode"   │┌─┐ │   \n",
+                unicode"   │    │   \n"
+                unicode"   │╓─  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │─╖  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │┼─┼ │   \n",
+                unicode"   │    │   \n"
+                unicode"   │──┼ │   \n",
+                unicode"   │    │   \n"
+                unicode"   │«─» │   \n",
+                unicode"   │    │   \n"
+                unicode"   │──  │   \n",
+                unicode" ∙ │    │   \n"
+                unicode" ∙───   │   \n",
+                unicode" ∙ │    │   \n"
+                unicode" ∙───)  │   \n",
+                unicode" ∙ │    │   \n"
+                unicode" ∙───]  │   \n",
+                unicode"   │⌐¬  │   \n"
+                unicode" √────  │   \n",
+                unicode"   │╓╖  │   \n"
+                unicode"   │──  │   \n",
+                unicode"   │~~  │   \n"
+                unicode"   │/\\  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │══  │   \n",
+                unicode"   │    │   \n"
+                unicode"   │▼▼  │   \n",
+                unicode"   │⌐¬  │   \n"
+                unicode"   │O   │   \n",
+                unicode"   │    │   \n"
+                unicode"   │O   │   \n",
+                unicode" ∙ │⌐¬  │   \n"
+                unicode" ∙───   │   \n",
+                unicode" ∙ │⌐¬  │   \n"
+                unicode" ∙───)  │   \n",
+                unicode" ∙ │⌐¬  │   \n"
+                unicode" ∙───]  │   \n",
+                unicode"   │⌐¬  │   \n"
+                unicode"   │──  │   \n",
+                unicode"   │⌐-¬ │   \n"
+                unicode"   │    │   \n",
+                unicode"   │┌-┐ │   \n"
+                unicode"   ││ │ │   \n"
             ];
 
         uint256 mouthId = rand % 32;

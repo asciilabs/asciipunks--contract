@@ -39,7 +39,7 @@ contract AsciiPunks {
     mapping(uint256 => address) internal idToApproval;
 
     uint256 internal numTokens = 0;
-    uint256 public constant TOKEN_LIMIT = 512;
+    uint256 public constant TOKEN_LIMIT = 1024;
     uint256 public constant PRICE = 300000000000000000;
 
     string internal _NFTName = "AsciiPunks";

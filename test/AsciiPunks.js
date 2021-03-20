@@ -5,6 +5,7 @@ const { accounts, contract, web3 } = require('@openzeppelin/test-environment');
 const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { shouldSupportInterfaces } = require('./SupportsInterface.js');
 
+const AsciiPunkFactory = contract.fromArtifact("AsciiPunkFactory");
 const AsciiPunks = contract.fromArtifact("AsciiPunks");
 const ERC721ReceiverMock = contract.fromArtifact('ERC721ReceiverMock');
 
@@ -24,7 +25,10 @@ let punk;
 
 describe("AsciiPunks", async (accounts) => {
   beforeEach(async function() {
-    this.token = await AsciiPunks.new();
+    const punkFactoryLibrary = await AsciiPunkFactory.new();
+    await AsciiPunks.detectNetwork();
+    await AsciiPunks.link('AsciiPunkFactory', punkFactoryLibrary.address);
+    this.token = await AsciiPunks.new(); 
   });
 
   context("ERC721", async () => {
@@ -585,13 +589,17 @@ describe("AsciiPunks", async (accounts) => {
     describe('createPunk', function () {
       let logs = null;
 
-      it.only('randomly generates cool AsciiPunks', async function() {
-        let i;
-        for (i = 0; i < 1000; i++) {
-          let punk = await this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')});
-          console.log(punk);
-        };
-      });
+      // context('randomization', async function () {
+      //   this.timeout(300000); 
+
+      //   it('randomly generates cool AsciiPunks', async function() {
+      //     let i;
+      //     for (i = 0; i < 1000; i++) {
+      //       let punk = await this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')});
+      //       console.log(punk.logs[0].args.value);
+      //     };
+      //   });
+      // });
 
       it('reverts when not enough ether sent', async function () {
         await expectRevert(
