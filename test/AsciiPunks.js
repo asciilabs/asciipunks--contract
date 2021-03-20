@@ -736,7 +736,7 @@ describe("AsciiPunks", async (accounts) => {
     });
   });
 
-  context.only("ERC721Metadata", async () => {
+  context("ERC721Metadata", async () => {
     shouldSupportInterfaces([
       'ERC721Metadata',
     ]);
