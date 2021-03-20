@@ -137,7 +137,11 @@ contract AsciiPunks is Ownable {
         return _NFTSymbol;
     }
 
-    function draw(uint256 _tokenId) external view validNFToken(_tokenId) returns (string memory)
+    function draw(uint256 _tokenId)
+        external
+        view
+        validNFToken(_tokenId)
+        returns (string memory)
     {
         string memory uri = AsciiPunkFactory.draw(idToSeed[_tokenId]);
         return uri;
@@ -150,7 +154,10 @@ contract AsciiPunks is Ownable {
         returns (string memory)
     {
         string memory uri = _baseURI();
-        return bytes(uri).length > 0 ? string(abi.encodePacked(uri, toString(_tokenId))) : '';
+        return
+            bytes(uri).length > 0
+                ? string(abi.encodePacked(uri, toString(_tokenId)))
+                : "";
     }
 
     function toString(uint256 value) internal pure returns (string memory) {
