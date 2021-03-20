@@ -619,6 +619,23 @@ describe("AsciiPunks", async (accounts) => {
           ));
         });
 
+        it('emits a Generated event', async function () {
+          expectEvent.inLogs(this.logs, 'Generated', { index: new BN(1), a: owner, value:
+"            \n" +
+"   ♣♥♦♠♣♥   \n" +
+"   ┌────┐   \n" +
+"   │    ├┐  \n" +
+"   │► ◄ └│  \n" +
+"   │ ┼  └┘  \n" +
+" ∙ │    │   \n" +
+" ∙───]  │   \n" +
+"   │    │   \n" +
+"   └──┘ │   \n" +
+"     │  │   \n" +
+"     │  │   \n"
+          });
+        });
+
         it('emits a Transfer event', function () {
           expectEvent.inLogs(this.logs, 'Transfer', { from: ZERO_ADDRESS, to: owner, tokenId: firstTokenId });
         });
