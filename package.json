@@ -14,7 +14,7 @@
     "console": "truffle console",
     "ganache": "ganache-cli --deterministic",
     "migrate": "truffle migrate",
-    "prettier": "prettier --write 'contracts/**/*.sol'",
+    "prettier": "prettier --tab-width 2 --write 'contracts/**/*.sol'",
     "test": "mocha --exit --recursive",
     "watch-tests": "./scripts/watch-tests.sh"
   },

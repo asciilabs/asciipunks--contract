@@ -599,9 +599,9 @@ describe("AsciiPunks", async (accounts) => {
       it('returns the punk string', async function () {
         const punk = await this.token.draw(new BN('1'));
         expect(punk).to.equal(
-"            \n" +
-"   ♣♥♦♠♣♥   \n" +
 "   ┌────┐   \n" +
+"   │   /└┐  \n" +
+"   ├────┐/  \n" +
 "   │    ├┐  \n" +
 "   │► ◄ └│  \n" +
 "   │ ┼  └┘  \n" +
@@ -650,9 +650,9 @@ describe("AsciiPunks", async (accounts) => {
 
         it('emits a Generated event', async function () {
           expectEvent.inLogs(this.logs, 'Generated', { index: new BN(1), a: owner, value:
-"            \n" +
-"   ♣♥♦♠♣♥   \n" +
 "   ┌────┐   \n" +
+"   │   /└┐  \n" +
+"   ├────┐/  \n" +
 "   │    ├┐  \n" +
 "   │► ◄ └│  \n" +
 "   │ ┼  └┘  \n" +
@@ -662,6 +662,7 @@ describe("AsciiPunks", async (accounts) => {
 "   └──┘ │   \n" +
 "     │  │   \n" +
 "     │  │   \n"
+
           });
         });
 
