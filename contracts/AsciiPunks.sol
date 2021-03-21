@@ -39,10 +39,10 @@ contract AsciiPunks is ERC721Metadata {
   mapping(uint256 => uint256) internal idToOwnerIndex;
   mapping(address => mapping(address => bool)) internal ownerToOperators;
   mapping(uint256 => address) internal idToApproval;
-
   uint256 internal numTokens = 0;
   uint256 public constant TOKEN_LIMIT = 1024;
-  uint256 public constant PRICE = 300000000000000000;
+  uint256 public constant PRICE = 100000000 gwei;
+  bool public hasSaleStarted = false;
 
   bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
   bytes4 private constant _INTERFACE_ID_ERC721_ENUMERABLE = 0x780e9d63;
@@ -87,6 +87,7 @@ contract AsciiPunks is ERC721Metadata {
   }
 
   function _mint(address to, uint256 seed) internal returns (string memory) {
+    require(hasSaleStarted == true, "Sale hasn't started");
     require(to != address(0), "ERC721: mint to the zero address");
     require(
       numTokens < TOKEN_LIMIT,
@@ -294,6 +295,13 @@ contract AsciiPunks is ERC721Metadata {
       bytes(uri).length > 0
         ? string(abi.encodePacked(uri, tokenId.toString()))
         : "";
+  }
+
+  function startSale() public onlyOwner {
+      hasSaleStarted = true;
+  }
+  function pauseSale() public onlyOwner {
+      hasSaleStarted = false;
   }
 
   function _checkOnERC721Received(

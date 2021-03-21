@@ -20,6 +20,7 @@ const secondTokenSeed = new BN('12430909');
 const firstTokenId = new BN('1');
 const secondTokenId = new BN('2');
 const nonExistentTokenId = new BN('13');
+const price = new BN('100000000000000000');
 
 let punk;
 
@@ -29,6 +30,7 @@ describe("AsciiPunks", async (accounts) => {
     await AsciiPunks.detectNetwork();
     await AsciiPunks.link('AsciiPunkFactory', punkFactoryLibrary.address);
     this.token = await AsciiPunks.new(); 
+    await this.token.startSale();
   });
 
   context("ERC721", async () => {
@@ -37,10 +39,19 @@ describe("AsciiPunks", async (accounts) => {
       'ERC721',
     ]);
 
+    context('startSale / pauseSale', function () {
+      it.only('only allows owner to pause and unpause', async function () {
+        await expectRevert(
+          this.token.pauseSale({ from: approved }),
+          'Ownable: caller is not the owner.'
+        );     
+      });
+    });
+
     context('with minted tokens', function () {
       beforeEach(async function () {
-        await this.token.createPunk(firstTokenSeed, { from: owner, value: new BN('300000000000000000')});
-        await this.token.createPunk(secondTokenSeed, { from: owner, value: new BN('300000000000000000')});
+        await this.token.createPunk(firstTokenSeed, { from: owner, value: price});
+        await this.token.createPunk(secondTokenSeed, { from: owner, value: price});
         this.toWhom = other;
       });
 
@@ -592,7 +603,7 @@ describe("AsciiPunks", async (accounts) => {
       beforeEach(async function () {
         ({ logs: this.logs } = await this.token.createPunk(
           firstTokenSeed,
-          { from: owner, value: new BN('300000000000000000')}
+          { from: owner, value: price}
         ));
       });
 
@@ -624,7 +635,7 @@ describe("AsciiPunks", async (accounts) => {
       //   it('randomly generates cool AsciiPunks', async function() {
       //     let i;
       //     for (i = 0; i < 1000; i++) {
-      //       let punk = await this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')});
+      //       let punk = await this.token.createPunk(i, { from: owner, value: price});
       //       console.log(punk.logs[0].args.value);
       //     };
       //   });
@@ -644,7 +655,7 @@ describe("AsciiPunks", async (accounts) => {
         beforeEach(async function () {
           ({ logs: this.logs } = await this.token.createPunk(
             firstTokenSeed,
-            { from: owner, value: new BN('300000000000000000')}
+            { from: owner, value: price}
           ));
         });
 
@@ -680,7 +691,7 @@ describe("AsciiPunks", async (accounts) => {
           await expectRevert(
             this.token.createPunk(
               firstTokenSeed,
-              { from: owner, value: new BN('300000000000000000') }
+              { from: owner, value: price }
             ),
             'ERC721: seed already used'
           );
@@ -692,7 +703,7 @@ describe("AsciiPunks", async (accounts) => {
       //   this.timeout(300000); 
       //   beforeEach(async function () {
       //     for (let i = 0; i < 512; i++) {
-      //       await this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')})
+      //       await this.token.createPunk(i, { from: owner, value: price})
       //     }
       //   });
 
@@ -700,7 +711,7 @@ describe("AsciiPunks", async (accounts) => {
       //     await expectRevert(
       //       this.token.createPunk(
       //         new BN('1000'),
-      //         { from: owner, value: new BN('300000000000000000') }
+      //         { from: owner, value: price }
       //       ),
       //       'ERC721: maximum number of tokens already minted'
       //     );
@@ -716,8 +727,8 @@ describe("AsciiPunks", async (accounts) => {
 
     context('with minted tokens', function () {
       beforeEach(async function () {
-        await this.token.createPunk(firstTokenSeed, { from: owner, value: new BN('300000000000000000')});
-        await this.token.createPunk(secondTokenSeed, { from: owner, value: new BN('300000000000000000')});
+        await this.token.createPunk(firstTokenSeed, { from: owner, value: price});
+        await this.token.createPunk(secondTokenSeed, { from: owner, value: price});
         this.toWhom = other; // default to other for toWhom in context-dependent tests
       });
 
@@ -807,7 +818,7 @@ describe("AsciiPunks", async (accounts) => {
     describe('token URI', function () {
       const baseURI = "https://api.com/v1/";
       beforeEach(async function () {
-        await this.token.createPunk(firstTokenSeed, { from: owner, value: new BN('300000000000000000')});
+        await this.token.createPunk(firstTokenSeed, { from: owner, value: price});
       });
 
       it('returns empty string by default', async function () {
