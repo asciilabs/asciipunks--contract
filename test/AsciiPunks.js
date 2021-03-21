@@ -2,7 +2,7 @@
 
 const { expect } = require('chai');
 const { accounts, contract, web3 } = require('@openzeppelin/test-environment');
-const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
+const { send, ether, balance, BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { shouldSupportInterfaces } = require('./SupportsInterface.js');
 
 const AsciiPunkFactory = contract.fromArtifact("AsciiPunkFactory");
@@ -22,6 +22,9 @@ const secondTokenId = new BN('2');
 const nonExistentTokenId = new BN('13');
 const price = new BN('100000000000000000');
 
+const CREATOR_ONE = '0x9386efb02a55A1092dC19f0E68a9816DDaAbDb5b';
+const CREATOR_TWO = '0xF2353AD0930B9F7cf16b4b8300B843349581E817';
+
 let punk;
 
 describe("AsciiPunks", async (accounts) => {
@@ -40,13 +43,105 @@ describe("AsciiPunks", async (accounts) => {
     ]);
 
     context('startSale / pauseSale', function () {
-      it.only('only allows owner to pause and unpause', async function () {
+      it('only allows owner to pause and unpause', async function () {
         await expectRevert(
           this.token.pauseSale({ from: approved }),
           'Ownable: caller is not the owner.'
         );     
       });
     });
+
+    context('Payment splitter', function () {
+      context('once deployed', function () {
+        it('has total shares', async function () {
+          expect(await this.token.totalShares()).to.be.bignumber.equal('10');
+        });
+
+        it('has payees', async function () {
+          expect(await this.token.payee(0)).to.equal(CREATOR_ONE);
+          expect(await this.token.released(CREATOR_ONE)).to.be.bignumber.equal('0');
+          expect(await this.token.payee(1)).to.equal(CREATOR_TWO);
+          expect(await this.token.released(CREATOR_TWO)).to.be.bignumber.equal('0');
+
+        });
+
+        it('stores payments in contract from creating punks', async function () {
+          await this.token.createPunk(firstTokenSeed, { from: other, value: price});
+          await this.token.createPunk(secondTokenSeed, { from: other, value: price});
+          expect(await balance.current(this.token.address)).to.be.bignumber.equal(ether('0.2'));
+        });
+
+        it('accepts payments', async function () {
+          const amount = ether('0.1');
+          await send.ether(owner, this.token.address, amount);
+
+          expect(await balance.current(this.token.address)).to.be.bignumber.equal(amount);
+        });
+
+        describe('shares', async function () {
+          it('stores shares if address is payee', async function () {
+            expect(await this.token.shares(CREATOR_ONE)).to.be.bignumber.not.equal('0');
+          });
+
+          it('does not store shares if address is not payee', async function () {
+            expect(await this.token.shares(other)).to.be.bignumber.equal('0');
+          });
+        });
+
+        describe('release', async function () {
+          it('reverts if no funds to claim', async function () {
+            await expectRevert(this.token.release(CREATOR_ONE),
+              'PaymentSplitter: account is not due payment',
+            );
+          });
+
+          it('reverts if non-payee want to claim', async function () {
+            await this.token.createPunk(firstTokenSeed, { from: other, value: price});
+            await expectRevert(this.token.release(other),
+              'PaymentSplitter: account has no shares',
+            );
+          });
+        });
+
+        it('distributes funds to payees', async function () {
+          await this.token.createPunk(new BN('1'), { from: other, value: price});
+          await this.token.createPunk(new BN('2'), { from: other, value: price});
+          await this.token.createPunk(new BN('3'), { from: other, value: price});
+          await this.token.createPunk(new BN('4'), { from: other, value: price});
+          await this.token.createPunk(new BN('5'), { from: other, value: price});
+          await this.token.createPunk(new BN('6'), { from: other, value: price});
+          await this.token.createPunk(new BN('7'), { from: other, value: price});
+          await this.token.createPunk(new BN('8'), { from: other, value: price});
+          await this.token.createPunk(new BN('9'), { from: other, value: price});
+          await this.token.createPunk(new BN('10'), { from: other, value: price});
+
+          // receive funds
+          const initBalance = await balance.current(this.token.address);
+          expect(initBalance).to.be.bignumber.equal(ether('1'));
+
+          // distribute to payees
+
+          const initAmount1 = await balance.current(CREATOR_ONE);
+          const { logs: logs1 } = await this.token.release(CREATOR_ONE, { gasPrice: 0 });
+          const profit1 = (await balance.current(CREATOR_ONE)).sub(initAmount1);
+          expect(profit1).to.be.bignumber.equal(ether('0.70'));
+          expectEvent.inLogs(logs1, 'PaymentReleased', { to: CREATOR_ONE, amount: profit1 });
+
+          const initAmount2 = await balance.current(CREATOR_TWO);
+          const { logs: logs2 } = await this.token.release(CREATOR_TWO, { gasPrice: 0 });
+          const profit2 = (await balance.current(CREATOR_TWO)).sub(initAmount2);
+          expect(profit2).to.be.bignumber.equal(ether('0.30'));
+          expectEvent.inLogs(logs2, 'PaymentReleased', { to: CREATOR_TWO, amount: profit2 });
+
+          // end balance should be zero
+          expect(await balance.current(this.token.address)).to.be.bignumber.equal('0');
+
+          // check correct funds released accounting
+          expect(await this.token.totalReleased()).to.be.bignumber.equal(initBalance);
+        });
+      });
+    });
+
 
     context('with minted tokens', function () {
       beforeEach(async function () {

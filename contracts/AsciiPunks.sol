@@ -6,8 +6,9 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./AsciiPunkFactory.sol";
 import "./ERC721Metadata.sol";
+import "./PaymentSplitter.sol";
 
-contract AsciiPunks is ERC721Metadata {
+contract AsciiPunks is ERC721Metadata, PaymentSplitter {
   using Address for address;
   using Strings for uint256;
 
@@ -298,10 +299,11 @@ contract AsciiPunks is ERC721Metadata {
   }
 
   function startSale() public onlyOwner {
-      hasSaleStarted = true;
+    hasSaleStarted = true;
   }
+
   function pauseSale() public onlyOwner {
-      hasSaleStarted = false;
+    hasSaleStarted = false;
   }
 
   function _checkOnERC721Received(
