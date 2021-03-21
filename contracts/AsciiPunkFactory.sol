@@ -2,7 +2,10 @@
 pragma solidity ^0.8.0;
 
 library AsciiPunkFactory {
-  uint256 private constant topCount = 55;
+  uint256 private constant TOP_COUNT = 55;
+  uint256 private constant EYE_COUNT = 48;
+  uint256 private constant NOSE_COUNT = 9;
+  uint256 private constant MOUTH_COUNT = 32;
 
   function draw(uint256 seed) public pure returns (string memory) {
     uint256 rand = uint256(keccak256(abi.encodePacked(seed)));
@@ -18,7 +21,7 @@ library AsciiPunkFactory {
   }
 
   function _chooseTop(uint256 rand) internal pure returns (string memory) {
-    string[topCount] memory tops =
+    string[TOP_COUNT] memory tops =
       [
         unicode"   ┌───┐    \n"
         unicode"   │   ┼┐   \n"
@@ -186,12 +189,12 @@ library AsciiPunkFactory {
         unicode"     \\/     \n"
         unicode"   ┌────┐   \n"
       ];
-    uint256 topId = rand % topCount;
+    uint256 topId = rand % TOP_COUNT;
     return tops[topId];
   }
 
   function _chooseEyes(uint256 rand) internal pure returns (string memory) {
-    string[48] memory leftEyes =
+    string[EYE_COUNT] memory leftEyes =
       [
         unicode"◕",
         unicode"ಥ",
@@ -243,7 +246,7 @@ library AsciiPunkFactory {
         unicode"x"
       ];
 
-    string[48] memory rightEyes =
+    string[EYE_COUNT] memory rightEyes =
       [
         unicode"◕",
         unicode"ಥ",
@@ -294,7 +297,7 @@ library AsciiPunkFactory {
         unicode"N",
         unicode"x"
       ];
-    uint256 eyeId = rand % 48;
+    uint256 eyeId = rand % EYE_COUNT;
 
     string memory leftEye = leftEyes[eyeId];
     string memory rightEye = rightEyes[eyeId];
@@ -319,7 +322,7 @@ library AsciiPunkFactory {
   }
 
   function _chooseMouth(uint256 rand) internal pure returns (string memory) {
-    string[32] memory mouths =
+    string[MOUTH_COUNT] memory mouths =
       [
         unicode"   │    │   \n"
         unicode"   │──  │   \n",
@@ -387,13 +390,13 @@ library AsciiPunkFactory {
         unicode"   ││ │ │   \n"
       ];
 
-    uint256 mouthId = rand % 32;
+    uint256 mouthId = rand % MOUTH_COUNT;
 
     return mouths[mouthId];
   }
 
   function _chooseNose(uint256 rand) internal pure returns (string memory) {
-    string[9] memory noses =
+    string[NOSE_COUNT] memory noses =
       [
         unicode"└",
         unicode"╘",
@@ -406,7 +409,7 @@ library AsciiPunkFactory {
         unicode"Γ"
       ];
 
-    uint256 noseId = rand % 9;
+    uint256 noseId = rand % NOSE_COUNT;
     string memory nose = noses[noseId];
     return string(abi.encodePacked(unicode"   │ ", nose, unicode"  └┘  \n"));
   }
