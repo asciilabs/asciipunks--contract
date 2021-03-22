@@ -10,10 +10,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "compile": "truffle compile",
-    "console": "truffle console",
+    "compile": "./node_modules/.bin/truffle compile",
+    "console": "./node_modules/.bin/truffle console",
     "ganache": "ganache-cli --deterministic",
-    "migrate": "truffle migrate",
+    "migrate": "./node_modules/.bin/truffle migrate",
+    "migrate-rinkeby": "./node_modules/.bin/truffle migrate --network rinkeby --reset --compile-all",
     "prettier": "prettier --tab-width 2 --write 'contracts/**/*.sol'",
     "test": "mocha --exit --recursive",
     "watch-tests": "./scripts/watch-tests.sh"
@@ -27,7 +28,7 @@
   "devDependencies": {
     "@openzeppelin/test-environment": "^0.1.9",
     "@openzeppelin/test-helpers": "^0.5.10",
-    "@truffle/hdwallet-provider": "^1.2.4",
+    "@truffle/hdwallet-provider": "1.2.1",
     "chai": "^4.3.3",
     "ganache-cli": "^6.12.2",
     "mocha": "^8.1.2",

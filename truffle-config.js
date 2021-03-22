@@ -66,7 +66,7 @@ module.exports = {
           process.env.INFURA_RINKEBY_URL
         ),
       network_id: 4,
-      gas: 10000000000,
+      gas: 8276569,
       skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
     },
     // Useful for private networks
@@ -88,7 +88,7 @@ module.exports = {
       version: "^0.8.0",
       settings: {
         optimizer: {
-          enabled: false,
+          enabled: true,
           runs: 200,
         },
         evmVersion: "byzantium",
