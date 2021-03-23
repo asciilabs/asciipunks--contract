@@ -12,6 +12,7 @@ contract ERC721Metadata is Ownable, ERC165 {
 
   constructor() {
     _registerInterface(_INTERFACE_ID_ERC721_METADATA);
+    _baseTokenURI = "https://api.asciipunks.com/punks/";
   }
 
   function name() external view returns (string memory) {

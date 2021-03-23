@@ -41,7 +41,7 @@ contract AsciiPunks is ERC721Metadata, PaymentSplitter {
   mapping(address => mapping(address => bool)) internal ownerToOperators;
   mapping(uint256 => address) internal idToApproval;
   uint256 internal numTokens = 0;
-  uint256 public constant TOKEN_LIMIT = 1024;
+  uint256 public constant TOKEN_LIMIT = 2048;
   uint256 public constant PRICE = 100000000 gwei;
   bool public hasSaleStarted = false;
 

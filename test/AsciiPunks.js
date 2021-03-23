@@ -916,8 +916,8 @@ describe("AsciiPunks", async (accounts) => {
         await this.token.createPunk(firstTokenSeed, { from: owner, value: price});
       });
 
-      it('returns empty string by default', async function () {
-        expect(await this.token.tokenURI(firstTokenId)).to.be.equal('');
+      it('returns api string by default', async function () {
+        expect(await this.token.tokenURI(firstTokenId)).to.be.equal('https://api.asciipunks.com/punks/1');
       });
 
       it('reverts when queried for non existent token id', async function () {

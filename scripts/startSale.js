@@ -11,6 +11,6 @@ module.exports = async (callback) => {
     abiJson,
     process.env.CONTRACT_ADDRESS
   )
-  await AsciiPunks.methods.startSale().call({ from: web3.currentProvider.addresses[0] })
+  await AsciiPunks.methods.startSale().send({ from: web3.currentProvider.addresses[0] })
   callback()
 }
