@@ -10,7 +10,7 @@ module.exports = async (callback) => {
   const abiJson = JSON.parse(abi).abi
   const AsciiPunks = new this.web3.eth.Contract(
     abiJson,
-    process.env.CONTRACT_ADDRESS
+    process.env.RINKEBY_CONTRACT_ADDRESS
   )
   await AsciiPunks.methods.pauseSale().send({ from: web3.currentProvider.addresses[0] })
   callback()
