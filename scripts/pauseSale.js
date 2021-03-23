@@ -1,3 +1,4 @@
+require('dotenv').config()
 const path = require('path')
 const fs = require('fs')
 const truffle = require('truffle')
@@ -11,6 +12,6 @@ module.exports = async (callback) => {
     abiJson,
     process.env.CONTRACT_ADDRESS
   )
-  await AsciiPunks.methods.startSale().call({ from: web3.currentProvider.addresses[0] })
+  await AsciiPunks.methods.pauseSale().call()
   callback()
 }
