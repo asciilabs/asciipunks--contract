@@ -42,7 +42,7 @@ describe("AsciiPunks", async (accounts) => {
       'ERC721',
     ]);
 
-    context.only('bonding curve', function () { 
+    context('bonding curve', function () { 
       this.timeout(300000); 
 
       it('prices punks according to a curve', async function() {
@@ -95,6 +95,8 @@ describe("AsciiPunks", async (accounts) => {
     });
 
     context('Payment splitter', function () {
+      this.timeout(5000); 
+
       context('once deployed', function () {
         it('has total shares', async function () {
           expect(await this.token.totalShares()).to.be.bignumber.equal('10');
@@ -111,7 +113,7 @@ describe("AsciiPunks", async (accounts) => {
         it('stores payments in contract from creating punks', async function () {
           await this.token.createPunk(firstTokenSeed, { from: other, value: price});
           await this.token.createPunk(secondTokenSeed, { from: other, value: price});
-          expect(await balance.current(this.token.address)).to.be.bignumber.equal(ether('0.2'));
+          expect(await balance.current(this.token.address)).to.be.bignumber.equal(ether('0.1'));
         });
 
         it('accepts payments', async function () {
@@ -157,6 +159,17 @@ describe("AsciiPunks", async (accounts) => {
           await this.token.createPunk(new BN('8'), { from: other, value: price});
           await this.token.createPunk(new BN('9'), { from: other, value: price});
           await this.token.createPunk(new BN('10'), { from: other, value: price});
+          await this.token.createPunk(new BN('11'), { from: other, value: price});
+          await this.token.createPunk(new BN('12'), { from: other, value: price});
+          await this.token.createPunk(new BN('13'), { from: other, value: price});
+          await this.token.createPunk(new BN('14'), { from: other, value: price});
+          await this.token.createPunk(new BN('15'), { from: other, value: price});
+          await this.token.createPunk(new BN('16'), { from: other, value: price});
+          await this.token.createPunk(new BN('17'), { from: other, value: price});
+          await this.token.createPunk(new BN('18'), { from: other, value: price});
+          await this.token.createPunk(new BN('19'), { from: other, value: price});
+          await this.token.createPunk(new BN('20'), { from: other, value: price});
+
 
           // receive funds
           const initBalance = await balance.current(this.token.address);
