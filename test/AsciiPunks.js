@@ -704,27 +704,14 @@ describe("AsciiPunks", async (accounts) => {
 
       it('returns the punk string', async function () {
         const punk = await this.token.draw(new BN('1'));
-        expect(punk).to.equal(
-"   ┌────┐   \n" +
-"   │   /└┐  \n" +
-"   ├────┐/  \n" +
-"   │    ├┐  \n" +
-"   │► ◄ └│  \n" +
-"   │ ┼  └┘  \n" +
-" ∙ │    │   \n" +
-" ∙───]  │   \n" +
-"   │    │   \n" +
-"   └──┘ │   \n" +
-"     │  │   \n" +
-"     │  │   \n"
-        )
+        expect(punk.length).to.equal(156)
       });
     });
 
     describe('createPunk', function () {
       let logs = null;
 
-      // context('randomization', async function () {
+      // context.only('randomization', async function () {
       //   this.timeout(300000); 
 
       //   it('randomly generates cool AsciiPunks', async function() {
@@ -755,27 +742,12 @@ describe("AsciiPunks", async (accounts) => {
         });
 
         it('emits a Generated event', async function () {
-          expectEvent.inLogs(this.logs, 'Generated', { index: new BN(1), a: owner, value:
-"   ┌────┐   \n" +
-"   │   /└┐  \n" +
-"   ├────┐/  \n" +
-"   │    ├┐  \n" +
-"   │► ◄ └│  \n" +
-"   │ ┼  └┘  \n" +
-" ∙ │    │   \n" +
-" ∙───]  │   \n" +
-"   │    │   \n" +
-"   └──┘ │   \n" +
-"     │  │   \n" +
-"     │  │   \n"
-
-          });
+          expectEvent.inLogs(this.logs, 'Generated', { index: new BN(1), a: owner });
         });
 
         it('emits a Transfer event', function () {
           expectEvent.inLogs(this.logs, 'Transfer', { from: ZERO_ADDRESS, to: owner, tokenId: firstTokenId });
         });
-
 
         it('creates the token', async function () {
           expect(await this.token.balanceOf(owner)).to.be.bignumber.equal('1');

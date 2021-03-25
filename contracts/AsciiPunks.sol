@@ -87,7 +87,7 @@ contract AsciiPunks is ERC721Metadata, PaymentSplitter {
     return _mint(_msgSender(), seed);
   }
 
-  function _mint(address to, uint256 seed) internal returns (string memory) {
+  function _mint(address to, uint256 _seed) internal returns (string memory) {
     require(hasSaleStarted == true, "Sale hasn't started");
     require(to != address(0), "ERC721: mint to the zero address");
     require(
@@ -95,6 +95,11 @@ contract AsciiPunks is ERC721Metadata, PaymentSplitter {
       "ERC721: maximum number of tokens already minted"
     );
     require(msg.value >= PRICE, "ERC721: insufficient ether");
+
+    uint256 seed = uint256(
+      keccak256(abi.encodePacked(_seed, block.timestamp, msg.sender, numTokens))
+    );
+
     require(seedToId[seed] == 0, "ERC721: seed already used");
 
     uint256 id = numTokens + 1;
