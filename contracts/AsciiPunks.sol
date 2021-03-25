@@ -42,7 +42,6 @@ contract AsciiPunks is ERC721Metadata, PaymentSplitter {
   mapping(uint256 => address) internal idToApproval;
   uint256 internal numTokens = 0;
   uint256 public constant TOKEN_LIMIT = 2048;
-  uint256 public constant PRICE = 100000000 gwei;
   bool public hasSaleStarted = false;
 
   bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
@@ -87,6 +86,22 @@ contract AsciiPunks is ERC721Metadata, PaymentSplitter {
     return _mint(_msgSender(), seed);
   }
 
+  function calculatePrice() internal view returns (uint256) {
+    uint256 price;
+    if (numTokens < 256) {
+      price = 50000000000000000;
+    } else if (numTokens >= 256 && numTokens < 512) {
+      price = 100000000000000000;
+    } else if (numTokens >= 512 && numTokens < 1024) {
+      price = 200000000000000000;
+    } else if (numTokens >= 1024 && numTokens < 1536) {
+      price = 300000000000000000;
+    } else {
+      price = 400000000000000000;
+    }
+    return price;
+  }
+
   function _mint(address to, uint256 _seed) internal returns (string memory) {
     require(hasSaleStarted == true, "Sale hasn't started");
     require(to != address(0), "ERC721: mint to the zero address");
@@ -94,7 +109,7 @@ contract AsciiPunks is ERC721Metadata, PaymentSplitter {
       numTokens < TOKEN_LIMIT,
       "ERC721: maximum number of tokens already minted"
     );
-    require(msg.value >= PRICE, "ERC721: insufficient ether");
+    require(msg.value >= calculatePrice(), "ERC721: insufficient ether");
 
     uint256 seed = uint256(
       keccak256(abi.encodePacked(_seed, block.timestamp, msg.sender, numTokens))

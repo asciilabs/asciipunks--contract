@@ -20,7 +20,7 @@ const secondTokenSeed = new BN('12430909');
 const firstTokenId = new BN('1');
 const secondTokenId = new BN('2');
 const nonExistentTokenId = new BN('13');
-const price = new BN('100000000000000000');
+const price = new BN('50000000000000000');
 
 const CREATOR_ONE = '0x9386efb02a55A1092dC19f0E68a9816DDaAbDb5b';
 const CREATOR_TWO = '0xF2353AD0930B9F7cf16b4b8300B843349581E817';
@@ -41,6 +41,49 @@ describe("AsciiPunks", async (accounts) => {
       'ERC165',
       'ERC721',
     ]);
+
+    context.only('bonding curve', function () { 
+      this.timeout(300000); 
+
+      it('prices punks according to a curve', async function() {
+        let i;
+        for (i = 0; i < 256; i++) {
+          ({ logs: this.logs} = await this.token.createPunk(i, { from: owner, value: price}));
+          expectEvent.inLogs(this.logs, 'Generated');
+          console.log(`minted punk ${i}`);
+        };
+
+        await expectRevert(this.token.createPunk(i, { from: owner, value: price}), "ERC721: insufficient ether");
+
+        for (i = 256; i < 512; i++) {
+          ({ logs: this.logs} = await this.token.createPunk(i, { from: owner, value: new BN('100000000000000000')}));
+          expectEvent.inLogs(this.logs, 'Generated');
+          console.log(`minted punk ${i}`);
+        };
+        await expectRevert(this.token.createPunk(i, { from: owner, value: new BN('100000000000000000')}), "ERC721: insufficient ether");
+
+        for (i = 512; i < 1024; i++) {
+          ({ logs: this.logs} = await this.token.createPunk(i, { from: owner, value: new BN('200000000000000000')}));
+          expectEvent.inLogs(this.logs, 'Generated');
+          console.log(`minted punk ${i}`);
+        };
+        await expectRevert(this.token.createPunk(i, { from: owner, value: new BN('200000000000000000')}), "ERC721: insufficient ether");
+
+        for (i = 1024; i < 1536; i++) {
+          ({ logs: this.logs} = await this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')}));
+          expectEvent.inLogs(this.logs, 'Generated');
+          console.log(`minted punk ${i}`);
+        };
+        await expectRevert(this.token.createPunk(i, { from: owner, value: new BN('300000000000000000')}), "ERC721: insufficient ether");
+
+        for (i = 1536; i < 2048; i++) {
+          ({ logs: this.logs} = await this.token.createPunk(i, { from: owner, value: new BN('400000000000000000')}));
+          expectEvent.inLogs(this.logs, 'Generated');
+          console.log(`minted punk ${i}`);
+        };
+        await expectRevert(this.token.createPunk(i, { from: owner, value: new BN('400000000000000000')}), "ERC721: maximum number of tokens already minted");
+      });
+    });
 
     context('startSale / pauseSale', function () {
       it('only allows owner to pause and unpause', async function () {
@@ -754,15 +797,16 @@ describe("AsciiPunks", async (accounts) => {
           expect(await this.token.ownerOf(firstTokenId)).to.equal(owner);
         });
 
-        it('reverts when using a seed that already exists', async function () {
-          await expectRevert(
-            this.token.createPunk(
-              firstTokenSeed,
-              { from: owner, value: price }
-            ),
-            'ERC721: seed already used'
-          );
-        });
+        // skipping this test because we now add randomness to seed
+        // it('reverts when using a seed that already exists', async function () {
+        //   await expectRevert(
+        //     this.token.createPunk(
+        //       firstTokenSeed,
+        //       { from: owner, value: price }
+        //     ),
+        //     'ERC721: seed already used'
+        //   );
+        // });
       });
 
       // Leave commented out because it's very slow
