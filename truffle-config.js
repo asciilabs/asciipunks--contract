@@ -16,6 +16,16 @@ module.exports = {
       network_id: "*", // Any network (default: none)
       websockets: true,
     },
+    mainnet: {
+      provider: () =>
+        new HDWalletProvider(
+          process.env.MNEMONIC,
+          process.env.INFURA_MAINNET_URL
+        ),
+      network_id: 1,
+      gas: 10000000,
+      skipDryRun: true,
+    },
     rinkeby: {
       provider: () =>
         new HDWalletProvider(
