@@ -16,7 +16,7 @@
     "migrate": "./node_modules/.bin/truffle migrate",
     "migrate:mainnet": "./node_modules/.bin/truffle migrate --network mainnet --reset --compile-all",
     "migrate:rinkeby": "./node_modules/.bin/truffle migrate --network rinkeby --reset --compile-all",
-    "verify:mainnet": "./node_modules/.bin/truffle run verify AsciiPunkFactory AsciiPunks --network mainnet",
+    "verify:mainnet": "./node_modules/.bin/truffle run verify AsciiPunkFactory@0x3c24A5DF4F69199962b163CB5762be1E8367CbEb AsciiPunks@0x1cA906e7D7297136AB558823AD7Fe502b5a7a861 --network mainnet",
     "verify:rinkeby": "./node_modules/.bin/truffle run verify AsciiPunkFactory AsciiPunks --network rinkeby",
     "prettier": "prettier --tab-width 2 --write 'contracts/**/*.sol'",
     "sale:start:rinkeby": "./node_modules/.bin/truffle exec --network rinkeby --compile ./scripts/startSale.js",
