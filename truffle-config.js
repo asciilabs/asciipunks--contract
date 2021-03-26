@@ -24,7 +24,7 @@ module.exports = {
           process.env.INFURA_MAINNET_URL
         ),
       network_id: 1,
-      gas: 8461538,
+      gas: 100000,
       gasPrice: web3.utils.toWei('130', 'gwei'),
       skipDryRun: true,
     },
@@ -35,7 +35,7 @@ module.exports = {
           process.env.INFURA_RINKEBY_URL
         ),
       network_id: 4,
-      gas: 8276569,
+      gas: 100000,
       skipDryRun: true,
     },
   },
@@ -46,7 +46,7 @@ module.exports = {
 
   compilers: {
     solc: {
-      version: "0.8.2",
+      version: "0.8.3",
       settings: {
         optimizer: {
           enabled: true,
