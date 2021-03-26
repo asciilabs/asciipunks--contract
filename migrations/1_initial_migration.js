@@ -8,7 +8,7 @@ module.exports = function (deployer, network, accounts) {
       {
         from: accounts[0],
         gas: 200000,
-        gasPrice: web3.utils.toWei('130', 'gwei'),
+        gasPrice: web3.utils.toWei(process.env.GAS_PRICE || '130', 'gwei'),
       }
     );
   });

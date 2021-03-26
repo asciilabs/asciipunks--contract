@@ -25,7 +25,7 @@ module.exports = {
         ),
       network_id: 1,
       gas: 100000,
-      gasPrice: web3.utils.toWei('130', 'gwei'),
+      gasPrice: web3.utils.toWei(process.env.GAS_PRICE || '130', 'gwei'),
       skipDryRun: true,
     },
     rinkeby: {
