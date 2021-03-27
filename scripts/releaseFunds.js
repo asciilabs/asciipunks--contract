@@ -12,7 +12,7 @@ module.exports = async (callback) => {
     abiJson,
     process.env.MAINNET_CONTRACT_ADDRESS
   )
-  await AsciiPunks.methods.pauseSale().send({
+  await AsciiPunks.methods.release('0x9386efb02a55A1092dC19f0E68a9816DDaAbDb5b').send({
     from: web3.currentProvider.addresses[0],
     gasLimit: 200000,
     gasPrice: web3.utils.toWei('130', 'gwei'),
