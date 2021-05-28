@@ -29,6 +29,8 @@
     "@openzeppelin/contracts": "^4.0.0-rc.0",
     "dotenv": "^8.2.0",
     "ganache-cli": "^6.12.2",
+    "lodash": "^4.17.21",
+    "mersenne-twister": "^1.1.0",
     "truffle": "^5.2.2"
   },
   "devDependencies": {

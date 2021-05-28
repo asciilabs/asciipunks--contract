@@ -3,3 +3,4 @@ node_modules/
 ref/
 .openzeppelin/
 .env
+scratch
