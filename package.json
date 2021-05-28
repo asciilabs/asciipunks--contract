@@ -20,6 +20,7 @@
     "verify:rinkeby": "./node_modules/.bin/truffle run verify AsciiPunkFactory AsciiPunks --network rinkeby",
     "prettier": "prettier --tab-width 2 --write 'contracts/**/*.sol'",
     "sale:start:rinkeby": "./node_modules/.bin/truffle exec --network rinkeby --compile ./scripts/startSale.js",
+    "sale:start:mainnet": "./node_modules/.bin/truffle exec --network mainnet --compile ./scripts/startSale.js",
     "sale:pause:rinkeby": "./node_modules/.bin/truffle exec --network rinkeby --compile ./scripts/pauseSale.js",
     "test": "mocha --exit --recursive",
     "watch-tests": "./scripts/watch-tests.sh"
