@@ -14,8 +14,8 @@ module.exports = async (callback) => {
   )
   await AsciiPunks.methods.release('0x9386efb02a55A1092dC19f0E68a9816DDaAbDb5b').send({
     from: web3.currentProvider.addresses[0],
-    gasLimit: 200000,
-    gasPrice: web3.utils.toWei('130', 'gwei'),
+    gasLimit: 100000,
+    gasPrice: web3.utils.toWei('60', 'gwei'),
   })
   callback()
 }
